@@ -1,0 +1,15 @@
+ae:
+  name: hsrb
+fixedflow:
+- CollectionReader
+- ImagePreprocessor
+- PointCloudFilter
+- NormalEstimator
+- PlaneAnnotator
+- ImageSegmentationAnnotator
+- PointCloudClusterExtractor
+- ClusterMerger
+- PrimitiveShapeAnnotator
+- NaiveObjectRecognition
+CollectionReader:
+  camera_config_files: ['config_hsrb.ini']
