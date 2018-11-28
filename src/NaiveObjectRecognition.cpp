@@ -39,22 +39,41 @@ public:
       scene.identifiables.filter(clusters);
       RosPublisher *p = new RosPublisher("rs_hrsb_perception/naive_object_recognition");
       for(auto &cluster : clusters) {
-          std::string shape = get_shape(cluster).shape.get();
-        if(shape == "round") {
-            p->publish("orange;");
-        } else if(shape == "box") {
-            p->publish("cereals");
-        }
+          std::string shape = get_shape(cluster);
+          std::ostringstream output;
+          if(shape == "round") {
+              output<<"I saw the apple or pair!";
+              p->publish(output.str());
+          } else if(shape == "cylinder") {
+              output<<"I saw the Pringles can!";
+              p->publish(output.str());
+          }
       }
       return UIMA_ERR_NONE;
     }
 
 
-    rs::Shape get_shape(rs::Cluster cluster) {
+    //TODO: This would be so much prettier with a lambda
+    std::string get_shape(rs::Cluster cluster) {
         std::vector<rs::Shape> shapeAnnots;
         cluster.annotations.filter(shapeAnnots);
-        return shapeAnnots[0];
+        if(!shapeAnnots.empty())
+            return shapeAnnots[0].shape.get();
+        return "";
     }
+
+    std::vector<float> get_color(rs::Cluster cluster) {
+        std::vector<rs::ColorHistogram> shapeAnnots;
+        cluster.annotations.filter(shapeAnnots);
+        std::vector<float> colors = std::vector<float>();
+        if(!shapeAnnots.empty()) {
+            rs::Mat color = shapeAnnots[0].hist.get();
+            colors.push_back(color.data.get()[color.rows.get()/2]);
+        }
+        return colors;
+    }
+
+
 
 
 };

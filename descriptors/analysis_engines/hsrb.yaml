@@ -3,13 +3,15 @@ ae:
 fixedflow:
 - CollectionReader
 - ImagePreprocessor
-- PointCloudFilter
-- NormalEstimator
 - PlaneAnnotator
-- ImageSegmentationAnnotator
 - PointCloudClusterExtractor
+- ImageSegmentationAnnotator
+- PointCloudFilter
+- Cluster3DGeometryAnnotator
+- NormalEstimator
 - ClusterMerger
-- PrimitiveShapeAnnotator
+- NaiveShapeAnnotator
+- ClusterColorHistogramCalculator
 - NaiveObjectRecognition
 CollectionReader:
   camera_config_files: ['config_hsrb.ini']
