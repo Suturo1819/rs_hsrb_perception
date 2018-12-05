@@ -13,5 +13,6 @@ fixedflow:
 - NaiveShapeAnnotator
 - ClusterColorHistogramCalculator
 - NaiveObjectRecognition
+- SuturoClassifier
 CollectionReader:
   camera_config_files: ['config_hsrb.ini']
