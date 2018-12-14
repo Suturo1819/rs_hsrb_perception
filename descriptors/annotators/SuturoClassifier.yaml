@@ -1,8 +1,8 @@
 annotator:
   implementation: rs_SuturoClassifier
 parameters:
-  trainedModel: "/home/suturo/suturo_ws/rs_hsrb_perception/resources/bvlc_reference_caffenet.caffemodel"
-  modelConfig: "/home/suturo/suturo_ws/rs_hsrb_perception/resources/caffeconfig.prototxt"
+  trainedModel: "/home/suturo/suturo_ws/src/rs_hsrb_perception/resources/bvlc_reference_caffenet.caffemodel"
+  modelConfig: "/home/suturo/suturo_ws/src/rs_hsrb_perception/resources/caffeconfig.prototxt"
   scaleFactor: 1.0
   swapRB: false
   inpWidth: 224

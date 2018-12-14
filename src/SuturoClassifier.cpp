@@ -54,7 +54,6 @@ private:
     Net net;
 
     // Video capture data types
-    VideoCapture capture;
     Mat processedFrame;
     Mat imgBlob;
 
@@ -77,8 +76,12 @@ public:
         mean.push_back(104);
         mean.push_back(117);
         mean.push_back(123);
-        net = readNetFromCaffe(modelConfig, trainedModel);
-        capture.open(0);
+
+        CV_Assert(!trainedModel.empty());
+        Net net = readNetFromCaffe(modelConfig, trainedModel);
+        // Create a window
+        static const std::string kWinName = "Deep learning image classification in OpenCV";
+        namedWindow(kWinName, WINDOW_NORMAL);
         return UIMA_ERR_NONE;
     }
 
@@ -92,14 +95,14 @@ public:
         rs::SceneCas cas(tcas);
         pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_ptr(new pcl::PointCloud<pcl::PointXYZRGBA>);
 
-        capture >> processedFrame;
-        if (processedFrame.empty()) {
-            waitKey();
-            return UIMA_ERR_NONE;
+        outInfo("Entering frame loop now...");
+        cas.get(VIEW_COLOR_IMAGE_HD, processedFrame);
+        if (processedFrame.empty())
+        {
+            return UIMA_ERR_LIST_IS_EMPTY;
         }
-
-        imgBlob = blobFromImage(processedFrame, scaleFactor, Size(inpWidth, inpHeight), Scalar(mean[0], mean[1], mean[2]), swapRB, false);
-        net.setInput(imgBlob);
+        /*blob = blobFromImage(frame, scaleFactor, Size(inpWidth, inpHeight), Scalar(mean[0], mean[1], mean[2]), swapRB, false);
+        net.setInput(blob);
         Mat prob = net.forward();
         Point classIdPoint;
         double confidence;
@@ -110,14 +113,13 @@ public:
         double freq = getTickFrequency() / 1000;
         double t = net.getPerfProfile(layersTimes) / freq;
         std::string label = format("Inference time: %.2f ms", t);
-        putText(processedFrame, label, Point(0, 15), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 255, 0));
-        outInfo(label);
+        putText(frame, label, Point(0, 15), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 255, 0));
         // Print predicted class.
         label = format("%s: %.4f", (classes.empty() ? format("Class #%d", classId).c_str() :
                                     classes[classId].c_str()),
                        confidence);
-        putText(processedFrame, label, Point(0, 40), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 255, 0));
-        outInfo(label);
+        putText(frame, label, Point(0, 40), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 255, 0));
+        imshow(kWinName, frame);*/
 
         return UIMA_ERR_NONE;
     }
