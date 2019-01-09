@@ -79,9 +79,6 @@ public:
 
         CV_Assert(!trainedModel.empty());
         Net net = readNetFromCaffe(modelConfig, trainedModel);
-        // Create a window
-        static const std::string kWinName = "Deep learning image classification in OpenCV";
-        namedWindow(kWinName, WINDOW_NORMAL);
         return UIMA_ERR_NONE;
     }
 
@@ -93,34 +90,48 @@ public:
     TyErrorId process(CAS &tcas, ResultSpecification const &res_spec) {
         outInfo("process start");
         rs::SceneCas cas(tcas);
-        pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_ptr(new pcl::PointCloud<pcl::PointXYZRGBA>);
+        pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGBA>);
+        cv::Mat color;
 
-        outInfo("Entering frame loop now...");
-        cas.get(VIEW_COLOR_IMAGE_HD, processedFrame);
-        if (processedFrame.empty())
-        {
-            return UIMA_ERR_LIST_IS_EMPTY;
+        cas.get(VIEW_CLOUD, *cloud);
+        cas.get(VIEW_COLOR_IMAGE_HD, color);
+
+        rs::Scene scene = cas.getScene();
+
+        std::vector<rs::Cluster> clusters;
+        scene.identifiables.filter(clusters);
+        for(int i = 0; i < clusters.size(); ++i) {
+            rs::Cluster &cluster = clusters[i];
+            if (!cluster.points.has()) {
+                continue;
+            }
+            cv::Rect roi;
+            rs::conversion::from(cluster.rois().roi_hires(), roi);
+
+            processedFrame = color(roi);
+            if (processedFrame.empty()) {
+                return UIMA_ERR_LIST_IS_EMPTY;
+            }
+            Mat blob = blobFromImage(processedFrame, scaleFactor, Size(inpWidth, inpHeight), Scalar(mean[0], mean[1], mean[2]),
+                                 swapRB, false);
+            net.setInput(blob);
+            Mat prob = net.forward();
+            Point classIdPoint;
+            double confidence;
+            minMaxLoc(prob.reshape(1, 1), 0, &confidence, 0, &classIdPoint);
+            int classId = classIdPoint.x;
+            // Put efficiency information.
+            std::vector<double> layersTimes;
+            double freq = getTickFrequency() / 1000;
+            double t = net.getPerfProfile(layersTimes) / freq;
+            std::string label = format("Inference time: %.2f ms", t);
+            outInfo(label);
+            // Print predicted class.
+            label = format("%s: %.4f", (classes.empty() ? format("Class #%d", classId).c_str() :
+                                        classes[classId].c_str()),
+                           confidence);
+            outInfo(label);
         }
-        /*blob = blobFromImage(frame, scaleFactor, Size(inpWidth, inpHeight), Scalar(mean[0], mean[1], mean[2]), swapRB, false);
-        net.setInput(blob);
-        Mat prob = net.forward();
-        Point classIdPoint;
-        double confidence;
-        minMaxLoc(prob.reshape(1, 1), 0, &confidence, 0, &classIdPoint);
-        int classId = classIdPoint.x;
-        // Put efficiency information.
-        std::vector<double> layersTimes;
-        double freq = getTickFrequency() / 1000;
-        double t = net.getPerfProfile(layersTimes) / freq;
-        std::string label = format("Inference time: %.2f ms", t);
-        putText(frame, label, Point(0, 15), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 255, 0));
-        // Print predicted class.
-        label = format("%s: %.4f", (classes.empty() ? format("Class #%d", classId).c_str() :
-                                    classes[classId].c_str()),
-                       confidence);
-        putText(frame, label, Point(0, 40), FONT_HERSHEY_SIMPLEX, 0.5, Scalar(0, 255, 0));
-        imshow(kWinName, frame);*/
-
         return UIMA_ERR_NONE;
     }
 };
