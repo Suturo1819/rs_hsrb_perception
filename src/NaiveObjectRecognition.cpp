@@ -6,7 +6,6 @@
 #include <rs/scene_cas.h>
 #include <rs/utils/time.h>
 
-#include <RosPublisher.h>
 
 using namespace uima;
 
@@ -37,16 +36,13 @@ public:
       rs::Scene scene = cas.getScene();
       std::vector<rs::Cluster> clusters;
       scene.identifiables.filter(clusters);
-      RosPublisher *p = new RosPublisher("rs_hrsb_perception/naive_object_recognition");
       for(auto &cluster : clusters) {
           std::string shape = get_shape(cluster);
           std::ostringstream output;
           if(shape == "round") {
               output<<"I saw the apple or pair!";
-              p->publish(output.str());
           } else if(shape == "cylinder") {
               output<<"I saw the Pringles can!";
-              p->publish(output.str());
           }
       }
       return UIMA_ERR_NONE;

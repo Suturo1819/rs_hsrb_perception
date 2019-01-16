@@ -50,9 +50,11 @@ find_additional_files()
 #If you want to divide your projects into subprojects include the subdirectories
 #each containing a CMakeLists.txt here
 #add_subdirectory(src/xxx)
-rs_add_library(rs_NaiveObjectRecognition src/NaiveObjectRecognition.cpp)
-target_link_libraries(rs_NaiveObjectRecognition ${CATKIN_LIBRARIES})
 rs_add_library(rs_NaiveShapeAnnotator src/NaiveShapeAnnotator.cpp)
 target_link_libraries(rs_NaiveShapeAnnotator ${CATKIN_LIBRARIES})
+rs_add_library(rs_NaiveObjectRecognition src/NaiveObjectRecognition.cpp)
+target_link_libraries(rs_NaiveObjectRecognition ${CATKIN_LIBRARIES})
 rs_add_library(rs_SuturoClassifier src/SuturoClassifier.cpp)
 target_link_libraries(rs_SuturoClassifier ${CATKIN_LIBRARIES})
+rs_add_library(rs_PositionMsg src/PositionMsg.cpp)
+target_link_libraries(rs_PositionMsg ${catkin_LIBRARIES})

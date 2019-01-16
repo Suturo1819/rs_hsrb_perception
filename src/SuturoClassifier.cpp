@@ -100,7 +100,7 @@ public:
 
         std::vector<rs::Cluster> clusters;
         scene.identifiables.filter(clusters);
-        for(int i = 0; i < clusters.size(); ++i) {
+        /*for(int i = 0; i < clusters.size(); ++i) {
             rs::Cluster &cluster = clusters[i];
             if (!cluster.points.has()) {
                 continue;
@@ -131,7 +131,7 @@ public:
                                         classes[classId].c_str()),
                            confidence);
             outInfo(label);
-        }
+        }*/
         return UIMA_ERR_NONE;
     }
 };

@@ -10,8 +10,14 @@ fixedflow:
 - Cluster3DGeometryAnnotator
 - NormalEstimator
 - ClusterMerger
+- ClusterTFLocationAnnotator
 - NaiveShapeAnnotator
-- ClusterColorHistogramCalculator
-- SuturoClassifier
+- PositionMsg
 CollectionReader:
   camera_config_files: ['config_hsrb.ini']
+
+PointCloudClusterExtractor:
+
+PlaneAnnotator:
+  plane_estimation_mode: 'PCL'
+  max_iterations: 500
