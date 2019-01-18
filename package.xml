@@ -52,6 +52,8 @@
   <build_depend>robosherlock</build_depend>
   <build_export_depend>robosherlock</build_export_depend>
   <exec_depend>robosherlock</exec_depend>
+  <depend>suturo_perception_msgs</depend>
+  <depend>geometry_msgs</depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

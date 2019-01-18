@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(rs_hsrb_perception)
-find_package(catkin REQUIRED robosherlock)
+find_package(catkin REQUIRED robosherlock suturo_perception_msgs geometry_msgs)
 ################################################################################
 ## Constants for project                                                      ##
 ################################################################################
@@ -20,6 +20,7 @@ configure_file(${RS_PROJECT_CONFIG} ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}_
 find_include_dirs(RS_INCLUDE_DIRS_LIST)
 catkin_package(
    CFG_EXTRAS ${PROJECT_NAME}_config.cmake
+   CATKIN_DEPENDS suturo_perception_msgs geometry_msgs
    )
 ################################################################################
 ## Package dependencies                                                       ##
