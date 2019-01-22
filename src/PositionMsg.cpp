@@ -79,6 +79,8 @@ public:
     void rsPoseToGeoPose(rs::StampedPose pose, PoseStamped &geoPose) {
         auto translation = pose.translation.get();
         auto rotation = pose.rotation.get();
+
+        // Pose infos
         geoPose.pose.position.x = translation[0];
         geoPose.pose.position.y = translation[1];
         geoPose.pose.position.z = translation[2];
@@ -86,6 +88,10 @@ public:
         geoPose.pose.orientation.y = rotation[1];
         geoPose.pose.orientation.z = rotation[2];
         geoPose.pose.orientation.w = rotation[3];
+
+        // Header infos
+        geoPose.header.frame_id = pose.frame.get();
+        geoPose.header.stamp.sec = pose.timestamp.get();
     }
 
 
