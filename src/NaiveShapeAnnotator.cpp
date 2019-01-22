@@ -45,6 +45,7 @@
 #include <rs/utils/time.h>
 #include <rs/utils/common.h>
 #include <rs/DrawingAnnotator.h>
+#include <rs_hsrb_perception/types/all_types.h>
 
 #undef OUT_LEVEL
 #define OUT_LEVEL OUT_LEVEL_INFO

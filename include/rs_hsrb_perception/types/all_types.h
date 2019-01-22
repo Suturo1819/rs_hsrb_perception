@@ -5,6 +5,7 @@
 #define __RS_HSRB_PERCEPTION_ALL_TYPES_H__
 
 #include <rs_hsrb_perception/types/type_definitions.h>
+#include <rs_hsrb_perception/types/property_types.h>
 
 
 #endif /* __RS_HSRB_PERCEPTION_ALL_TYPES_H__ */
