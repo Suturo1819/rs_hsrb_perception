@@ -41,22 +41,22 @@ public:
         std::vector<rs::Cluster> clusters;
         scene.identifiables.filter(clusters);
         for (auto &cluster : clusters) {
-            auto *shape = get_annotation<rs::Shape>(cluster);
-            auto *bb = get_annotation<rs_hsrb_perception::BoundingBox>(cluster);
-            if (shape != nullptr && bb != nullptr) {
+            auto shapes = get_annotations<rs::Shape>(cluster);
+            auto bbs = get_annotations<rs_hsrb_perception::BoundingBox>(cluster);
+            if (!shapes.empty() && !bbs.empty()) {
                 std::vector<rs::PoseAnnotation> poses;
                 cluster.annotations.filter(poses);
                 for (auto &pose : poses) {
                     outInfo("Creating ROS msg for recognized object...");
                     ObjectDetectionData odd = ObjectDetectionData();
                     odd.name = "Object";
-                    odd.shape = shape_map(shape->shape.get());
+                    odd.shape = shape_map(shapes[0].shape());
                     PoseStamped poseStamped = PoseStamped();
                     rsPoseToGeoPose(pose.world.get(), poseStamped);
                     odd.pose = poseStamped;
-                    odd.width = bb->width.get();
-                    odd.height = bb->height.get();
-                    odd.depth = bb->depth.get();
+                    odd.width = bbs[0].width();
+                    odd.height = bbs[0].height.get();
+                    odd.depth = bbs[0].depth.get();
                     msgPublisher->publish(odd);
                 }
             }
@@ -64,15 +64,13 @@ public:
         return UIMA_ERR_NONE;
     }
 
-    template<class T> T *get_annotation(rs::Cluster cluster) {
+    template<class T> std::vector<T> get_annotations(rs::Cluster cluster) {
         std::vector<T> annotations;
         cluster.annotations.filter(annotations);
-        if (!annotations.empty())
-            return &annotations[0];
-        return nullptr;
+        return annotations;
     }
 
-    u_int shape_map(const std::string shape) {
+    u_int shape_map(std::string shape) {
         if (shape == "round" || shape == "cylinder") {
             return ObjectDetectionData::CYLINDER;
         } else if (shape == "box") {

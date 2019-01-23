@@ -319,9 +319,9 @@ public:
 
           // Add the bounding box as annotation, too
           rs_hsrb_perception::BoundingBox bbAnnotation = rs::create<rs_hsrb_perception::BoundingBox>(tcas);
-          bbAnnotation.width.set(box.width.get());
-          bbAnnotation.height.set(box.height.get());
-          bbAnnotation.depth.set(box.depth.get());
+          bbAnnotation.width.set(box.width());
+          bbAnnotation.height.set(box.height());
+          bbAnnotation.depth.set(box.depth());
           cluster.annotations.append(bbAnnotation);
           
           float max_edge = std::max(box.width(), std::max(box.depth(), box.height()));
