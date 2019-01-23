@@ -8,6 +8,7 @@
 
 #include <suturo_perception_msgs/ObjectDetectionData.h>
 #include <geometry_msgs/PoseStamped.h>
+#include <rs_hsrb_perception/types/all_types.h>
 #include "../include/rs_hsrb_perception/MsgPublisher.h"
 
 using namespace uima;
@@ -40,18 +41,22 @@ public:
         std::vector<rs::Cluster> clusters;
         scene.identifiables.filter(clusters);
         for (auto &cluster : clusters) {
-            auto shape = get_shape(cluster);
-            if (!shape.empty()) {
+            auto *shape = get_annotation<rs::Shape>(cluster);
+            auto *bb = get_annotation<rs_hsrb_perception::BoundingBox>(cluster);
+            if (shape != nullptr && bb != nullptr) {
                 std::vector<rs::PoseAnnotation> poses;
                 cluster.annotations.filter(poses);
                 for (auto &pose : poses) {
                     outInfo("Creating ROS msg for recognized object...");
                     ObjectDetectionData odd = ObjectDetectionData();
                     odd.name = "Object";
-                    odd.shape = shape_map(shape);
+                    odd.shape = shape_map(shape->shape.get());
                     PoseStamped poseStamped = PoseStamped();
                     rsPoseToGeoPose(pose.world.get(), poseStamped);
                     odd.pose = poseStamped;
+                    odd.width = bb->width.get();
+                    odd.height = bb->height.get();
+                    odd.depth = bb->depth.get();
                     msgPublisher->publish(odd);
                 }
             }
@@ -59,12 +64,12 @@ public:
         return UIMA_ERR_NONE;
     }
 
-    std::string get_shape(rs::Cluster cluster) {
-        std::vector<rs::Shape> shapeAnnots;
-        cluster.annotations.filter(shapeAnnots);
-        if (!shapeAnnots.empty())
-            return shapeAnnots[0].shape.get();
-        return "";
+    template<class T> T *get_annotation(rs::Cluster cluster) {
+        std::vector<T> annotations;
+        cluster.annotations.filter(annotations);
+        if (!annotations.empty())
+            return &annotations[0];
+        return nullptr;
     }
 
     u_int shape_map(const std::string shape) {
