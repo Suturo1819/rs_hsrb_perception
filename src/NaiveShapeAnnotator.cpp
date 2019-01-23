@@ -317,6 +317,13 @@ public:
         {
           rs::BoundingBox3D box = geom[0].boundingBox();
 
+          // Add the bounding box as annotation, too
+          rs_hsrb_perception::BoundingBox bbAnnotation = rs::create<rs_hsrb_perception::BoundingBox>(tcas);
+          bbAnnotation.width.set(box.width.get());
+          bbAnnotation.height.set(box.height.get());
+          bbAnnotation.depth.set(box.depth.get());
+          cluster.annotations.append(bbAnnotation);
+          
           float max_edge = std::max(box.width(), std::max(box.depth(), box.height()));
           float min_edge = std::min(box.width(), std::min(box.depth(), box.height()));
           if(min_edge / max_edge <= 0.25)
