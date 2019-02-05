@@ -38,7 +38,7 @@ public:
         cas.get(VIEW_CLOUD, *cloud_ptr);
 
         rs::Scene scene = cas.getScene();
-        std::vector<rs::Cluster> clusters;
+        std::vector<rs::ObjectHypothesis> clusters;
         scene.identifiables.filter(clusters);
         for (auto &cluster : clusters) {
             auto shapes = get_annotations<rs::Shape>(cluster);
@@ -64,7 +64,7 @@ public:
         return UIMA_ERR_NONE;
     }
 
-    template<class T> std::vector<T> get_annotations(rs::Cluster cluster) {
+    template<class T> std::vector<T> get_annotations(rs::ObjectHypothesis cluster) {
         std::vector<T> annotations;
         cluster.annotations.filter(annotations);
         return annotations;

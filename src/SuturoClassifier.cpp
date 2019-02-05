@@ -98,7 +98,7 @@ public:
 
         rs::Scene scene = cas.getScene();
 
-        std::vector<rs::Cluster> clusters;
+        std::vector<rs::ObjectHypothesis> clusters;
         scene.identifiables.filter(clusters);
         /*for(int i = 0; i < clusters.size(); ++i) {
             rs::Cluster &cluster = clusters[i];

@@ -3,21 +3,18 @@ ae:
 fixedflow:
 - CollectionReader
 - ImagePreprocessor
-- PlaneAnnotator
-- PointCloudClusterExtractor
-- ImageSegmentationAnnotator
 - PointCloudFilter
-- Cluster3DGeometryAnnotator
 - NormalEstimator
+- PlaneAnnotator
+- ImageSegmentationAnnotator
+- PointCloudClusterExtractor
 - ClusterMerger
 - ClusterTFLocationAnnotator
-- NaiveShapeAnnotator
+- Cluster3DGeometryAnnotator
+- PrimitiveShapeAnnotator
 - PositionMsg
+
 CollectionReader:
   camera_config_files: ['config_hsrb.ini']
 
-PointCloudClusterExtractor:
 
-PlaneAnnotator:
-  plane_estimation_mode: 'PCL'
-  max_iterations: 500
