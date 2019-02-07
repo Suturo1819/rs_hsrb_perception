@@ -4,17 +4,18 @@ fixedflow:
 - CollectionReader
 - ImagePreprocessor
 - PointCloudFilter
+- ClusterFilter
 - NormalEstimator
 - PlaneAnnotator
-- ImageSegmentationAnnotator
 - PointCloudClusterExtractor
 - ClusterMerger
-- ClusterTFLocationAnnotator
 - Cluster3DGeometryAnnotator
 - PrimitiveShapeAnnotator
 - PositionMsg
 
 CollectionReader:
   camera_config_files: ['config_hsrb.ini']
+
+PointCloudFilter:
 
 

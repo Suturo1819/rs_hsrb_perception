@@ -42,8 +42,9 @@ public:
         scene.identifiables.filter(clusters);
         for (auto &cluster : clusters) {
             auto shapes = get_annotations<rs::Shape>(cluster);
-            auto bbs = get_annotations<rs_hsrb_perception::BoundingBox>(cluster);
-            if (!shapes.empty() && !bbs.empty()) {
+            auto geometry = get_annotations<rs::Geometry>(cluster);
+            if (!shapes.empty() && !geometry.empty()) {
+                outInfo("I saw some Shapes and BoundingBoxes. Leave it to me!");
                 std::vector<rs::PoseAnnotation> poses;
                 cluster.annotations.filter(poses);
                 for (auto &pose : poses) {
@@ -54,11 +55,14 @@ public:
                     PoseStamped poseStamped = PoseStamped();
                     rsPoseToGeoPose(pose.world.get(), poseStamped);
                     odd.pose = poseStamped;
-                    odd.width = bbs[0].width();
-                    odd.height = bbs[0].height.get();
-                    odd.depth = bbs[0].depth.get();
+                    auto boundingBox = geometry[0].boundingBox();
+                    odd.width = boundingBox.width();
+                    odd.height = boundingBox.height();
+                    odd.depth = boundingBox.depth();
                     msgPublisher->publish(odd);
                 }
+            } else  {
+                outInfo("No shapes were recognized");
             }
         }
         return UIMA_ERR_NONE;
