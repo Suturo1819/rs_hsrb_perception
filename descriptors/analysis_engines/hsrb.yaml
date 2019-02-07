@@ -4,10 +4,10 @@ fixedflow:
 - CollectionReader
 - ImagePreprocessor
 - PointCloudFilter
-- ClusterFilter
 - NormalEstimator
 - PlaneAnnotator
 - PointCloudClusterExtractor
+- ClusterFilter
 - ClusterMerger
 - Cluster3DGeometryAnnotator
 - PrimitiveShapeAnnotator
@@ -17,5 +17,10 @@ CollectionReader:
   camera_config_files: ['config_hsrb.ini']
 
 PointCloudFilter:
-
-
+  viewport_id: 'base'
+  minX: -2.0
+  maxX: 2.0
+  minY: -0.3
+  maxY: 0.3
+  minZ: 0.5
+  maxZ: 10.0
