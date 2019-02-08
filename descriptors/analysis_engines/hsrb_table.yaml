@@ -1,5 +1,5 @@
 ae:
-  name: hsrb
+  name: hsrb_table
 fixedflow:
 - CollectionReader
 - ImagePreprocessor

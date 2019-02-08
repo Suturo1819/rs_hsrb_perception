@@ -1,5 +1,5 @@
 ae:
-  name: hsrb
+  name: hsrb_shelf
 fixedflow:
 - CollectionReader
 - ImagePreprocessor
@@ -17,10 +17,10 @@ CollectionReader:
   camera_config_files: ['config_hsrb.ini']
 
 PointCloudFilter:
-  transform_cloud: true
-  minX: 0.0
-  maxX: 1.6
-  minY: -0.5
-  maxY: 0.5
-  minZ: 0.5
-  maxZ: 1.0
+  transform_cloud: false
+  minX: -2.5
+  maxX: 2.5
+  minY: -2.5
+  maxY: 2.5
+  minZ: 0.0
+  maxZ: 2.0
