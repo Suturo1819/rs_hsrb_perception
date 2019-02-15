@@ -41,8 +41,10 @@ public:
         std::vector<rs::ObjectHypothesis> clusters;
         scene.identifiables.filter(clusters);
         for (auto &cluster : clusters) {
-            auto shapes = get_annotations<rs::Shape>(cluster);
-            auto geometry = get_annotations<rs::Geometry>(cluster);
+            std::vector<rs::Shape> shapes;
+            get_annotations<rs::Shape>(cluster, shapes);
+            std::vector<rs::Geometry> geometry;
+            get_annotations<rs::Geometry>(cluster, geometry);
             if (!shapes.empty() && !geometry.empty()) {
                 outInfo("I saw some Shapes and BoundingBoxes. Leave it to me!");
                 std::vector<rs::PoseAnnotation> poses;
@@ -50,16 +52,16 @@ public:
                 for (auto &pose : poses) {
                     outInfo("Creating ROS msg for recognized object...");
                     ObjectDetectionData odd = ObjectDetectionData();
-                    odd.name = "Object";
-                    odd.shape = shape_map(shapes[0].shape());
-                    PoseStamped poseStamped = PoseStamped();
+                    PoseStamped poseStamped;
                     rsPoseToGeoPose(pose.world.get(), poseStamped);
-                    odd.pose = poseStamped;
-                    auto boundingBox = geometry[0].boundingBox();
-                    odd.width = boundingBox.width();
-                    odd.height = boundingBox.height();
-                    odd.depth = boundingBox.depth();
+                    makeObjectDetectionData(poseStamped, geometry[0], shapes[0], odd);
                     msgPublisher->publish(odd);
+
+                    tf::Stamped<tf::Pose> tfPose;
+                    rsPoseToTfPose(pose.world.get(), tfPose);
+                    tf::Stamped<tf::Pose> odom;
+                    tf::Transformer transformer;
+                    transformer.transformPose("odom", tfPose, odom);
                 }
             } else  {
                 outInfo("No shapes were recognized");
@@ -68,10 +70,8 @@ public:
         return UIMA_ERR_NONE;
     }
 
-    template<class T> std::vector<T> get_annotations(rs::ObjectHypothesis cluster) {
-        std::vector<T> annotations;
+    template<class T> void get_annotations(rs::ObjectHypothesis cluster, std::vector<T> annotations) {
         cluster.annotations.filter(annotations);
-        return annotations;
     }
 
     u_int shape_map(std::string shape) {
@@ -83,6 +83,18 @@ public:
         return ObjectDetectionData::MISC;
     }
 
+    void makeObjectDetectionData(PoseStamped pose, rs::Geometry geometry, rs::Shape shape, ObjectDetectionData &odd) {
+        odd.shape = shape_map(shape.shape());
+        odd.pose = pose;
+        auto boundingBox = geometry.boundingBox();
+        odd.width = boundingBox.width();
+        odd.height = boundingBox.height();
+        odd.depth = boundingBox.depth();
+        odd.name = "Object (" + pose.header.frame_id + ")";
+    }
+
+    // A bunch of pose type transformation functions
+    // Todo: Think of a smarter way to transform pose types
     void rsPoseToGeoPose(rs::StampedPose pose, PoseStamped &geoPose) {
         auto translation = pose.translation.get();
         auto rotation = pose.rotation.get();
@@ -99,6 +111,28 @@ public:
         // Header infos
         geoPose.header.frame_id = pose.frame.get();
         geoPose.header.stamp.sec = pose.timestamp.get();
+    }
+
+    void rsPoseToTfPose(rs::StampedPose pose, tf::Stamped<tf::Pose> &tfPose) {
+        auto translation = pose.translation.get();
+        auto rotation = pose.rotation.get();
+
+        // Pose infos
+        tfPose.getOrigin()[0] = translation[0];
+        tfPose.getOrigin()[1] = translation[1];
+        tfPose.getOrigin()[2] = translation[2];
+        tfPose.getRotation().setX(rotation[0]);
+        tfPose.getRotation().setY(rotation[1]);
+        tfPose.getRotation().setZ(rotation[2]);
+        tfPose.getRotation().setW(rotation[3]);
+
+        // Header infos
+        tfPose.frame_id_ = pose.frame.get();
+        tfPose.stamp_ = ros::Time(pose.timestamp.get());
+    }
+
+    void tfPoseToRsPose(tf::Stamped<tf::Pose> tfPose, rs::StampedPose) {
+
     }
 
 
