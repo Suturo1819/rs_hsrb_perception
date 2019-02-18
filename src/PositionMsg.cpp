@@ -54,7 +54,7 @@ public:
                 cluster.annotations.filter(poses);
                 for (auto &pose : poses) {
                     outInfo("Creating ROS msg for recognized object...");
-                    ObjectDetectionData odd = ObjectDetectionData();
+                    ObjectDetectionData odd;
                     PoseStamped poseStamped;
                     rsPoseToGeoPose(pose.world.get(), poseStamped);
                     makeObjectDetectionData(poseStamped, geometry[0], shapes[0], odd);
@@ -66,7 +66,7 @@ public:
                     tl.transformPose("odom", tfPose, odom);
                     PoseStamped odomPose;
                     tfPoseToGeoPose(odom, odomPose);
-                    ObjectDetectionData odomData = ObjectDetectionData();
+                    ObjectDetectionData odomData;
                     makeObjectDetectionData(odomPose, geometry[0], shapes[0], odomData);
                     msgPublisher->publish(odomData);
                 }
@@ -77,7 +77,7 @@ public:
         return UIMA_ERR_NONE;
     }
 
-    template<class T> void get_annotations(rs::ObjectHypothesis cluster, std::vector<T> annotations) {
+    template<class T> void get_annotations(rs::ObjectHypothesis cluster, std::vector<T> &annotations) {
         cluster.annotations.filter(annotations);
     }
 
@@ -117,7 +117,8 @@ public:
 
         // Header infos
         geoPose.header.frame_id = pose.frame.get();
-        geoPose.header.stamp.sec = pose.timestamp.get();
+        geoPose.header.stamp.sec = pose.timestamp.get()/1000000000;
+        geoPose.header.stamp.nsec = pose.timestamp.get();
     }
 
     void rsPoseToTfPose(rs::StampedPose pose, tf::Stamped<tf::Pose> &tfPose) {
@@ -135,10 +136,11 @@ public:
 
         // Header infos
         tfPose.frame_id_ = pose.frame.get();
-        tfPose.stamp_ = ros::Time(pose.timestamp.get());
+        tfPose.stamp_.sec = pose.timestamp.get()/1000000000;
+        tfPose.stamp_.nsec = pose.timestamp.get();
     }
 
-    void tfPoseToGeoPose(tf::Stamped<tf::Pose> tfPose, PoseStamped geoPose) {
+    void tfPoseToGeoPose(tf::Stamped<tf::Pose> tfPose, PoseStamped &geoPose) {
 
         geoPose.pose.position.x = tfPose.getOrigin()[0];
         geoPose.pose.position.y = tfPose.getOrigin()[1];
@@ -151,10 +153,11 @@ public:
 
         geoPose.header.frame_id = tfPose.frame_id_;
         geoPose.header.stamp.sec = tfPose.stamp_.sec;
+        geoPose.header.stamp.nsec = tfPose.stamp_.nsec;
 
     }
 
-    void tfPoseToRsPose(tf::Stamped<tf::Pose> tfPose, rs::StampedPose rsPose) {
+    void tfPoseToRsPose(tf::Stamped<tf::Pose> tfPose, rs::StampedPose &rsPose) {
 
         rsPose.translation.get()[0] = tfPose.getOrigin()[0];
         rsPose.translation.get()[1] = tfPose.getOrigin()[1];
@@ -166,7 +169,7 @@ public:
         rsPose.rotation.get()[3] =  tfPose.getRotation().w();
 
         rsPose.frame.set(tfPose.frame_id_);
-        rsPose.timestamp.set(tfPose.stamp_.sec);
+        rsPose.timestamp.set(tfPose.stamp_.nsec);
 
     }
 
