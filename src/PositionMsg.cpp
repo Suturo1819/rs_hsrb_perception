@@ -11,6 +11,8 @@
 #include <rs_hsrb_perception/types/all_types.h>
 #include "../include/rs_hsrb_perception/MsgPublisher.h"
 
+#include <tf/transform_listener.h>
+
 using namespace uima;
 using namespace suturo_perception_msgs;
 using namespace geometry_msgs;
@@ -19,6 +21,7 @@ class PositionMsg : public Annotator {
 
 private:
     MsgPublisher *msgPublisher;
+    tf::TransformListener tl;
 public:
 
     TyErrorId initialize(AnnotatorContext &ctx) {
@@ -60,8 +63,12 @@ public:
                     tf::Stamped<tf::Pose> tfPose;
                     rsPoseToTfPose(pose.world.get(), tfPose);
                     tf::Stamped<tf::Pose> odom;
-                    tf::Transformer transformer;
-                    transformer.transformPose("odom", tfPose, odom);
+                    tl.transformPose("odom", tfPose, odom);
+                    PoseStamped odomPose;
+                    tfPoseToGeoPose(odom, odomPose);
+                    ObjectDetectionData odomData = ObjectDetectionData();
+                    makeObjectDetectionData(odomPose, geometry[0], shapes[0], odomData);
+                    msgPublisher->publish(odomData);
                 }
             } else  {
                 outInfo("No shapes were recognized");
@@ -131,7 +138,35 @@ public:
         tfPose.stamp_ = ros::Time(pose.timestamp.get());
     }
 
-    void tfPoseToRsPose(tf::Stamped<tf::Pose> tfPose, rs::StampedPose) {
+    void tfPoseToGeoPose(tf::Stamped<tf::Pose> tfPose, PoseStamped geoPose) {
+
+        geoPose.pose.position.x = tfPose.getOrigin()[0];
+        geoPose.pose.position.y = tfPose.getOrigin()[1];
+        geoPose.pose.position.z = tfPose.getOrigin()[2];
+
+        tfPose.getRotation().setX(tfPose.getRotation().x());
+        tfPose.getRotation().setX(tfPose.getRotation().y());
+        tfPose.getRotation().setX(tfPose.getRotation().z());
+        tfPose.getRotation().setX(tfPose.getRotation().w());
+
+        geoPose.header.frame_id = tfPose.frame_id_;
+        geoPose.header.stamp.sec = tfPose.stamp_.sec;
+
+    }
+
+    void tfPoseToRsPose(tf::Stamped<tf::Pose> tfPose, rs::StampedPose rsPose) {
+
+        rsPose.translation.get()[0] = tfPose.getOrigin()[0];
+        rsPose.translation.get()[1] = tfPose.getOrigin()[1];
+        rsPose.translation.get()[2] = tfPose.getOrigin()[2];
+
+        rsPose.rotation.get()[0] =  tfPose.getRotation().x();
+        rsPose.rotation.get()[1] =  tfPose.getRotation().y();
+        rsPose.rotation.get()[2] =  tfPose.getRotation().z();
+        rsPose.rotation.get()[3] =  tfPose.getRotation().w();
+
+        rsPose.frame.set(tfPose.frame_id_);
+        rsPose.timestamp.set(tfPose.stamp_.sec);
 
     }
 
