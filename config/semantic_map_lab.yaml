@@ -1,0 +1,29 @@
+%YAML:1.0
+names:
+  - robocup_table
+  - robocup_shelf
+robocup_table:
+  type: Table
+  width:  0.8
+  height: 0.717
+  depth: 0.8
+  transform: !!opencv-matrix
+       rows: 4
+       cols: 4
+       dt: d
+       data: [ 1., 0., 0., -0.35,
+               0., 1., 0., -1.7,
+               0., 0., 1., 0,
+               0., 0., 0., 1. ]
+robocup_shelf:
+  type: Shelf
+  width:  12.800000000000000e-01
+  height: 3.5999999999999997e-02
+  depth: 4.899999999999997e-01
+  transform: !!opencv-matrix
+       rows: 4
+       cols: 4
+       dt: d
+       data: [ 1., 0., 0., 1.20499999999999999e+00, 0., 1., 0.,
+               0.2140000000000000e+00, 0., 0., 1., 1.1549999999999999999e-00,
+               0., 0., 0., 1. ]

@@ -4,6 +4,7 @@ fixedflow:
 - CollectionReader
 - ImagePreprocessor
 - PointCloudFilter
+- RegionFilter
 - NormalEstimator
 - PlaneAnnotator
 - PointCloudClusterExtractor
@@ -17,10 +18,16 @@ CollectionReader:
   camera_config_files: ['config_hsrb.ini']
 
 PointCloudFilter:
-  transform_cloud: true
+  source_frame: 'head_rgbd_sensor_rgb_frame'
+  target_frame: 'base_footprint'
   minX: 0.0
-  maxX: 1.6
-  minY: -0.5
-  maxY: 0.5
+  maxX: 1.0
+  minY: -1.0
+  maxY: 1.0
   minZ: 0.5
-  maxZ: 1.0
+  maxZ: 2.0
+
+RegionFilter:
+  defaultRegions:
+    - robocup_table
+    - robocup_shelf
