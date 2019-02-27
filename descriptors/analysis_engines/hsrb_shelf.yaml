@@ -10,6 +10,7 @@ fixedflow:
 - Cluster3DGeometryAnnotator
 - PrimitiveShapeAnnotator
 #- PositionMsg
+-
 
 CollectionReader:
   camera_config_files: ['config_hsrb.ini']
