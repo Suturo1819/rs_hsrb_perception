@@ -7,20 +7,20 @@ fixedflow:
 - NormalEstimator
 - PlaneAnnotator
 - PointCloudClusterExtractor
-- ClusterFilter
-- ClusterMerger
 - Cluster3DGeometryAnnotator
 - PrimitiveShapeAnnotator
-- PositionMsg
+#- PositionMsg
 
 CollectionReader:
   camera_config_files: ['config_hsrb.ini']
 
 PointCloudFilter:
-  transform_cloud: false
-  minX: -2.5
-  maxX: 2.5
-  minY: -2.5
-  maxY: 2.5
+  minX: 0.0
+  maxX: 1.0
+  minY: -1.5
+  maxY: 1.5
   minZ: 0.0
   maxZ: 2.0
+
+PlaneAnnotator:
+  multiple_planes: true
