@@ -7,20 +7,25 @@ fixedflow:
 - NormalEstimator
 - PlaneAnnotator
 - PointCloudClusterExtractor
-- ClusterFilter
-- ClusterMerger
 - Cluster3DGeometryAnnotator
 - PrimitiveShapeAnnotator
-- PositionMsg
+- CaffeAnnotator
+- RfAnnotator
+#- StorageWriter
+#- FeatureAnnotator
+#- KnnAnnotator
 
 CollectionReader:
   camera_config_files: ['config_hsrb.ini']
+#StorageWriter:
+#    storagedb: 'ScenesAnnotated'
+
 
 PointCloudFilter:
   transform_cloud: true
-  minX: 0.0
+  minX: -1.6
   maxX: 1.6
-  minY: -0.5
+  minY: -0.3
   maxY: 0.5
   minZ: 0.5
   maxZ: 1.0
