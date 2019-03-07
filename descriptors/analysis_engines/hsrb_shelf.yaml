@@ -4,6 +4,7 @@ fixedflow:
 - CollectionReader
 - ImagePreprocessor
 - PointCloudFilter
+- RegionFilter
 - NormalEstimator
 - PlaneAnnotator
 #- PointCloudClusterExtractor
@@ -22,4 +23,10 @@ PointCloudFilter:
   maxZ: 2.0
 
 PlaneAnnotator:
+  plane_estimation_mode: PCL
   max_planes: 5
+
+RegionFilter:
+  enable_frustum_culling: true
+  defaultRegions:
+    - robocup_shelf
