@@ -25,8 +25,9 @@ PointCloudFilter:
 PlaneAnnotator:
   plane_estimation_mode: PCL
   max_planes: 5
+  horizontal: true
 
 RegionFilter:
-  enable_frustum_culling: true
+  enable_frustum_culling: false
   defaultRegions:
     - robocup_shelf

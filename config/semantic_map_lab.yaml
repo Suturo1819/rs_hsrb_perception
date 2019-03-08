@@ -17,9 +17,9 @@ robocup_table:
               0., 0., 0., 1. ]
 robocup_shelf:
    type: Shelf
-   width:  12.800000000000000e-01
-   height: 3.5999999999999997e-02
-   depth: 4.899999999999997e-01
+   width:  1.0
+   height: 2.0
+   depth: 3.0
    transform: !!opencv-matrix
       rows: 4
       cols: 4
