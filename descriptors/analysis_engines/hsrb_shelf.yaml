@@ -7,9 +7,10 @@ fixedflow:
 - RegionFilter
 - NormalEstimator
 - PlaneAnnotator
-#- PointCloudClusterExtractor
-#- Cluster3DGeometryAnnotator
-#- PrimitiveShapeAnnotator
+- PointCloudClusterExtractor
+- ClusterMerger
+- Cluster3DGeometryAnnotator
+- PrimitiveShapeAnnotator
 
 CollectionReader:
   camera_config_files: ['config_hsrb.ini']
@@ -23,11 +24,13 @@ PointCloudFilter:
   maxZ: 2.0
 
 PlaneAnnotator:
-  plane_estimation_mode: PCL
+  plane_estimation_mode: REGIONS
   max_planes: 5
   horizontal: true
 
 RegionFilter:
-  enable_frustum_culling: false
+  enable_frustum_culling: true
   defaultRegions:
+    - robocup_table
     - robocup_shelf
+  annotate: true

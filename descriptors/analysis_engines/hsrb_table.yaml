@@ -7,10 +7,12 @@ fixedflow:
 - NormalEstimator
 - PlaneAnnotator
 - PointCloudClusterExtractor
-- ClusterFilter
+#- ClusterFilter
 - ClusterMerger
 - Cluster3DGeometryAnnotator
 - PrimitiveShapeAnnotator
+- CaffeAnnotator
+- KnnAnnotator
 #- PositionMsg
 
 CollectionReader:
