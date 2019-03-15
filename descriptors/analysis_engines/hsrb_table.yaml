@@ -25,4 +25,7 @@ PointCloudFilter:
   maxY: 1.0
   minZ: 0.5
   maxZ: 2.0
+  transform_cloud: true
 
+PlaneAnnotator:
+  max_inliers: 1000
