@@ -10,18 +10,20 @@ fixedflow:
 - Cluster3DGeometryAnnotator
 - PrimitiveShapeAnnotator
 #- PositionMsg
--
 
 CollectionReader:
   camera_config_files: ['config_hsrb.ini']
 
 PointCloudFilter:
-  minX: 0.0
-  maxX: 1.0
+  minX: -0.5
+  maxX: 0.8
   minY: -1.5
   maxY: 1.5
   minZ: 0.0
   maxZ: 2.0
+  transform_cloud: true
 
 PlaneAnnotator:
-  multiple_planes: true
+  max_planes: 5
+  horizontal: true
+  min_plane_inliers: 500

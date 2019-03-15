@@ -7,7 +7,7 @@ fixedflow:
 - NormalEstimator
 - PlaneAnnotator
 - PointCloudClusterExtractor
-- ClusterFilter
+#- ClusterFilter
 - ClusterMerger
 - Cluster3DGeometryAnnotator
 - PrimitiveShapeAnnotator
@@ -28,4 +28,4 @@ PointCloudFilter:
   transform_cloud: true
 
 PlaneAnnotator:
-  max_inliers: 1000
+  min_plane_inliers: 1000
