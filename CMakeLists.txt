@@ -47,12 +47,10 @@ generate_type_system(robosherlock)
 find_additional_files()
 
 # Utilities
-add_library(Msgs SHARED src/MsgPublisher.cpp)
-target_link_libraries(Msgs ${CATKIN_LIBRARIES})
+add_library(Suturo SHARED src/SuturoProcessManager.cpp)
+target_link_libraries(Suturo ${CATKIN_LIBRARIES})
 
 # Annotators / Fixed Flow Types
 rs_add_library(rs_SuturoClassifier src/SuturoClassifier.cpp)
-target_link_libraries(rs_SuturoClassifier ${CATKIN_LIBRARIES})
-rs_add_library(rs_PositionMsg src/PositionMsg.cpp)
-target_link_libraries(rs_PositionMsg Msgs)
+target_link_libraries(rs_SuturoClassifier Suturo)
 
