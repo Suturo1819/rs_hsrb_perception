@@ -13,6 +13,7 @@ fixedflow:
 - PrimitiveShapeAnnotator
 - CaffeAnnotator
 - KnnAnnotator
+- KnnAnnotatorKnownObj
 #- PositionMsg
 
 CollectionReader:
