@@ -19,6 +19,8 @@ configure_file(${RS_PROJECT_CONFIG} ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}_
 ################################################################################
 find_include_dirs(RS_INCLUDE_DIRS_LIST)
 catkin_package(
+   INCLUDE_DIRS include ${RS_INCLUDE_DIRS_LIST} ${catkin_INCLUDE_DIRS}
+   LIBRARIES ${PROJECT_NAME}
    CFG_EXTRAS ${PROJECT_NAME}_config.cmake
    CATKIN_DEPENDS suturo_perception_msgs geometry_msgs
    )
@@ -48,10 +50,10 @@ generate_type_system(robosherlock)
 find_additional_files()
 
 # Utilities
-add_library(Suturo SHARED src/SuturoProcessManager.cpp)
-target_link_libraries(Suturo ${CATKIN_LIBRARIES})
+add_library(${PROJECT_NAME} SHARED src/SuturoProcessManager.cpp)
+target_link_libraries(${PROJECT_NAME} ${CATKIN_LIBRARIES})
 
 # Annotators / Fixed Flow Types
 rs_add_library(rs_SuturoClassifier src/SuturoClassifier.cpp)
-target_link_libraries(rs_SuturoClassifier Suturo)
+target_link_libraries(rs_SuturoClassifier ${PROJECT_NAME})
 
