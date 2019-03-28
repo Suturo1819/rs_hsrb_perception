@@ -11,9 +11,9 @@ fixedflow:
 - ClusterMerger
 - Cluster3DGeometryAnnotator
 - PrimitiveShapeAnnotator
-- CaffeAnnotator
-- KnnAnnotator
-- KnnAnnotatorKnownObj
+#- CaffeAnnotator
+#- KnnAnnotator
+#- KnnAnnotatorKnownObj
 #- PositionMsg
 
 CollectionReader:
