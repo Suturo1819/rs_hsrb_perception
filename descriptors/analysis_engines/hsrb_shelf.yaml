@@ -3,7 +3,7 @@ ae:
 fixedflow:
 - CollectionReader
 - ImagePreprocessor
-- PointCloudFilter
+- RegionFilter
 - NormalEstimator
 - PlaneAnnotator
 - PointCloudClusterExtractor
@@ -21,9 +21,20 @@ PointCloudFilter:
   maxX: 1.0
   minY: -1.5
   maxY: 1.5
-  minZ: -2.0
+  minZ: 0.7
   maxZ: 2.0
   transform_cloud: true
+
+RegionFilter:
+  enable_frustum_culling: false
+  defaultRegions:
+    - robocup_table
+    - robocup_shelf_0
+    - robocup_shelf_1
+    - robocup_shelf_2
+    - robocup_shelf_3
+    - robocup_shelf_4
+  annotate: true
 
 PlaneAnnotator:
   horizontal: true
