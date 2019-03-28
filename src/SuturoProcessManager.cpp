@@ -28,13 +28,13 @@ SuturoProcessManager::SuturoProcessManager(ros::NodeHandle n, const std::string 
             break;
     }
 
-
+    visService = nh.advertiseService("vis_command", &SuturoProcessManager::visControlCallback, this);
 }
 
 
 
 void SuturoProcessManager::init(std::string &pipeline) {
-    outInfo("Initializing RoboSherlock...");
+    outInfo("Initializing Engine...");
     signal(SIGINT, RSProcessManager::signalHandler);
 
     std::string pipelinePath;
@@ -47,11 +47,8 @@ void SuturoProcessManager::init(std::string &pipeline) {
 
 void SuturoProcessManager::run(bool visualize, std::vector<ObjectDetectionData>& detectionData) {
     outInfo("Running the Suturo Process Manager");
-    if(visualize) {
-        outInfo("Creating visualizer");
-        //rs::Visualizer vis(savePath, false);
-        //vis.start();
-    }
+    visualizer = new rs::Visualizer(savePath, !visualize);
+    visualizer->start();
     outInfo("Analysis engine starts processing");
     engine.process();
     uima::CAS* tcas = engine.getCas();
@@ -65,6 +62,37 @@ void SuturoProcessManager::run(bool visualize, std::vector<ObjectDetectionData>&
     for (auto &cluster : clusters) {
         getClusterFeatures(cluster, detectionData);
     }
+}
+
+bool SuturoProcessManager::visControlCallback(robosherlock_msgs::RSVisControl::Request &req,
+                                          robosherlock_msgs::RSVisControl::Response &res)
+{
+
+    std::string command = req.command;
+    bool result = true;
+    if(visualizer != nullptr) {
+        std::string activeAnnotator = "";
+        if(command == "next")
+        {
+            activeAnnotator = visualizer->nextAnnotator();
+
+        }
+        else if(command == "previous")
+        {
+            activeAnnotator = visualizer->prevAnnotator();
+        }
+        else if(command.empty())
+        {
+            activeAnnotator = visualizer->selectAnnotator(command);
+        }
+        if(activeAnnotator.empty())
+            result = false;
+
+        res.success = result;
+
+        res.active_annotator = activeAnnotator;
+    }
+    return result;
 }
 
 
