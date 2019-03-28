@@ -50,7 +50,7 @@ generate_type_system(robosherlock)
 find_additional_files()
 
 # Utilities
-add_library(${PROJECT_NAME} SHARED src/SuturoProcessManager.cpp)
+add_library(${PROJECT_NAME} SHARED src/SuturoProcessManager.cpp src/suturo_conversion.cpp include/rs_hsrb_perception/suturo_conversion.h)
 target_link_libraries(${PROJECT_NAME} ${CATKIN_LIBRARIES})
 
 # Annotators / Fixed Flow Types
