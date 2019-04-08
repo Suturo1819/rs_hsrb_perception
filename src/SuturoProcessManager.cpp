@@ -28,8 +28,7 @@ SuturoProcessManager::SuturoProcessManager(ros::NodeHandle n, const std::string 
             resourceManager.setLoggingLevel(uima::LogStream::EnMessage);
             break;
     }
-
-    visService = nh.advertiseService((name+"/vis_command").c_str(), &SuturoProcessManager::visControlCallback, this);
+    regions = std::vector<std::string>();
 }
 
 
@@ -46,10 +45,18 @@ void SuturoProcessManager::init(std::string &pipeline) {
     mongo::client::GlobalInstance instance;
 }
 
-void SuturoProcessManager::run(bool visualize, std::vector<ObjectDetectionData>& detectionData) {
+void SuturoProcessManager::run(std::map<std::string, boost::any> args, std::vector<ObjectDetectionData>& detectionData) {
     outInfo("Running the Suturo Process Manager");
-    visualizer = new rs::Visualizer(savePath, !visualize);
-    visualizer->start();
+    outInfo("Setting up runtime parameters...");
+    if(args.find("visualize") != args.end()) {
+        visualize = boost::any_cast<bool>(&args["visualize"]);
+        //@Todo: Create visualizer here
+    }
+    if(args.find("regions") != args.end()) {
+        outInfo("Custom regions are displayed");
+        regions = boost::any_cast<std::vector<std::string>>(args["regions"]);
+        filter_regions = true;
+    }
     outInfo("Analysis engine starts processing");
     engine.process();
     uima::CAS* tcas = engine.getCas();
@@ -61,39 +68,13 @@ void SuturoProcessManager::run(bool visualize, std::vector<ObjectDetectionData>&
     std::vector<rs::ObjectHypothesis> clusters;
     scene.identifiables.filter(clusters);
     for (auto &cluster : clusters) {
-        getClusterFeatures(cluster, detectionData);
+        outInfo("Cluster region: " << cluster.region());
+        if(!filter_regions || std::find(regions.begin(), regions.end(), cluster.region()) != regions.end()) {
+            getClusterFeatures(cluster, detectionData);
+        } else {
+            outInfo("Object was ignored because it seems to be placed on the wrong surface");
+        }
     }
-}
-
-bool SuturoProcessManager::visControlCallback(robosherlock_msgs::RSVisControl::Request &req,
-                                          robosherlock_msgs::RSVisControl::Response &res)
-{
-
-    std::string command = req.command;
-    bool result = true;
-    if(visualizer != nullptr) {
-        std::string activeAnnotator = "";
-        if(command == "next")
-        {
-            activeAnnotator = visualizer->nextAnnotator();
-
-        }
-        else if(command == "previous")
-        {
-            activeAnnotator = visualizer->prevAnnotator();
-        }
-        else if(command.empty())
-        {
-            activeAnnotator = visualizer->selectAnnotator(command);
-        }
-        if(activeAnnotator.empty())
-            result = false;
-
-        res.success = result;
-
-        res.active_annotator = activeAnnotator;
-    }
-    return result;
 }
 
 
