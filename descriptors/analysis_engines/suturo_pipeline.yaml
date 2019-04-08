@@ -1,0 +1,41 @@
+ae:
+  name: suturo_pipeline
+fixedflow:
+- CollectionReader
+- ImagePreprocessor
+- RegionFilter
+- NormalEstimator
+- PlaneAnnotator
+- PointCloudClusterExtractor
+- Cluster3DGeometryAnnotator
+- PrimitiveShapeAnnotator
+- CaffeAnnotator
+- KnnAnnotator
+- KnnAnnotatorKnownObj
+
+CollectionReader:
+  camera_config_files: ['config_hsrb.ini']
+
+PointCloudFilter:
+  minX: -1.0
+  maxX: 1.0
+  minY: -1.5
+  maxY: 1.5
+  minZ: 0.7
+  maxZ: 2.0
+  transform_cloud: true
+
+RegionFilter:
+  enable_frustum_culling: false
+  defaultRegions:
+  - robocup_table
+  - robocup_shelf_0
+  - robocup_shelf_1
+  - robocup_shelf_2
+  - robocup_shelf_3
+  - robocup_shelf_4
+  annotate: true
+
+PlaneAnnotator:
+  horizontal: true
+  min_plane_inliers: 1000
