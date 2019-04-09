@@ -57,3 +57,6 @@ target_link_libraries(${PROJECT_NAME} ${CATKIN_LIBRARIES})
 rs_add_library(rs_SuturoClassifier src/SuturoClassifier.cpp)
 target_link_libraries(rs_SuturoClassifier ${PROJECT_NAME})
 
+rs_add_library(rs_SaveClusterCloudsAndImages src/SaveClusterCloudsAndImages.cpp)
+target_link_libraries(rs_SaveClusterCloudsAndImages ${catkin_LIBRARIES})
+
