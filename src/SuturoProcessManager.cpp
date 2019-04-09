@@ -112,22 +112,29 @@ void SuturoProcessManager::getClusterFeatures(rs::ObjectHypothesis cluster, std:
             knownObjClass = classification[1].classname.get();
             outInfo("OBJCLASSNAME >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>: " << classification[0].classname.get());
             outInfo("OBJCLASSNAME >>>>>>>>>KNOWN>>>>>>>KNOWN>>>>>>>: " << classification[1].classname.get());
+
+            if(!confi.empty()){
+                confidence = confi[0].score.get();
+                knownObjConfidence = confi[1].score.get();
+                outInfo("OBJCLASSCONFI <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<: " << confi[0].score.get());
+                outInfo("OBJCLASSCONFI <<<<<<<<<KNOWN<<<<<<<KNOWN<<<<<<: " << confi[1].score.get());
+
+                if(confidence < knownObjConfidence){
+                    objClass = knownObjClass;
+                }
+            } else {
+                ROS_WARN("Warning: No confidence was perceived");
+            }
+
         } else {
             ROS_WARN("Warning: No object class was perceived");
         }
-        if(!confi.empty()){
-            confidence = confi[0].score.get();
-            knownObjConfidence = confi[1].score.get();
-            outInfo("OBJCLASSCONFI <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<: " << confi[0].score.get());
-            outInfo("OBJCLASSCONFI <<<<<<<<<KNOWN<<<<<<<KNOWN<<<<<<: " << confi[1].score.get());
-        } else {
-            ROS_WARN("Warning: No confidence was perceived");
-        }
+
 
         rs_hsrb_perception::conversion::makeObjectDetectionData(poseStamped, geometry[0],
-                rs_hsrb_perception::conversion::decode_shape(shapes), objClass, confidence,
-                knownObjClass, knownObjConfidence, odd);
+                rs_hsrb_perception::conversion::decode_shape(shapes), objClass, confidence, odd);
         data.push_back(odd);
+
 
 
     } else {
