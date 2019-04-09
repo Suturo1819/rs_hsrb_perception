@@ -46,6 +46,7 @@
 #include <pcl/point_cloud.h>
 #include <pcl/filters/extract_indices.h>
 #include <pcl/io/pcd_io.h>
+#include <opencv2/highgui/highgui.hpp>
 
 using namespace uima;
 
@@ -82,16 +83,19 @@ public:
         }
         if(ctx.isParameterDefined("padding"))
         {
+            outInfo("padding wurde gewaelt >>>>>>>>>>>>>>>>>>.");
             ctx.extractValue("padding", padding);
         }
-        fullPath = ros::package::getPath("rs_hsr_perception") + "/data/" + objectName;
 
+        fullPath = ros::package::getPath("rs_hsr_perception") + "/data/" + objectName;
+        outInfo("FULLPATH WURDE GESETTET>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..");
         struct stat fileStat;
 
         if(stat(fullPath.c_str(), &fileStat))
         {
             mkdir(fullPath.c_str(), 9999);
         }
+
         outInfo("saving images to: "<<fullPath);
         idx = 0;
         return (TyErrorId) UIMA_ERR_NONE;
@@ -130,10 +134,18 @@ public:
             cv::Mat mask;
             cv::Rect roi;
             rs::conversion::from(image_rois.roi_hires(), roi);
-//            roi.x -= padding;
-//            roi.y -= padding;
-//            roi.height += 2 * padding;
-//            roi.width += 2 * padding;
+            outInfo(roi.x);
+            outInfo(roi.y);
+            outInfo(roi.height);
+            outInfo(roi.width);
+            outInfo(padding);
+            roi.x -=  padding;
+            roi.y -= padding;
+            roi.height += 2 * padding;
+            roi.width += 2 * padding;
+            mask = cv::Mat::zeros(roi.height,roi.width,CV_8UC1);
+
+
             rs::conversion::from(image_rois.mask_hires(), mask);
 
             std::stringstream ss_rgb;
@@ -147,7 +159,7 @@ public:
             ss_mask << fullPath << "/" << objectName << "_" << angle << "_" << idx << "_mask.png";
             ss_location << fullPath << "/" << objectName << "_" << angle << "_" << idx << "_loc.txt";
             ss_pcd << fullPath << "/" << objectName << "_" << angle << "_" << idx << ".pcd";
-
+            outInfo(ss_rgb.str());
             cv::imwrite(ss_rgb.str(), cv::Mat(color, roi));
             cv::imwrite(ss_depth.str(), cv::Mat(depth, roi));
             //todo: make mask the same size as color and depth
@@ -156,6 +168,14 @@ public:
             cv::Mat paddedMask;
             cv::copyMakeBorder(mask,paddedMask,padding,padding,padding,padding,cv::BORDER_CONSTANT,value);
             cv::imwrite(ss_mask.str(), paddedMask);
+
+            cv::Mat imgInput = cv::imread(ss_rgb.str());
+
+            if (imgInput.data != NULL)
+            {
+                outInfo("inputData empty?");
+            }
+
 
             filestream.open(ss_location.str(), std::ios::out);
             filestream << roi.x << "," << roi.y;
@@ -166,6 +186,7 @@ public:
             rs::ObjectHypothesis &cluster = clusters[0];
             if(cluster.points.has())
             {
+                outInfo("save the point cloud");
                 pcl::PointIndicesPtr indices(new pcl::PointIndices());
                 rs::conversion::from(((rs::ReferenceClusterPoints)cluster.points.get()).indices.get(), *indices);
                 pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cluster_cloud(new pcl::PointCloud<pcl::PointXYZRGBA>());
