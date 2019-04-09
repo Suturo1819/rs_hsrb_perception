@@ -1,0 +1,7 @@
+annotator:
+  implementation: rs_SaveClusterCloudsAndImages
+parameters:
+  objectName: 'ObjectName'
+capabilities:
+  inputs: {}
+  outputs: {}

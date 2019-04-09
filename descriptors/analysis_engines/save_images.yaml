@@ -1,0 +1,26 @@
+ae:
+  name: hsrb_table
+fixedflow:
+- CollectionReader
+- ImagePreprocessor
+- PointCloudFilter
+- PlaneAnnotator
+- PointCloudClusterExtractor
+- SaveClusterCloudsAndImages
+
+CollectionReader:
+  camera_config_files: ['config_hsrb.ini']
+
+PointCloudFilter:
+  minX: 0.0
+  maxX: 1.0
+  minY: -1.0
+  maxY: 1.0
+  minZ: 0.5
+  maxZ: 2.0
+
+PlaneAnnotator:
+  plane_estimation_mode: FILE
+
+SaveClusterCloudsAndImages:
+  objectName: 'Dinkels'
