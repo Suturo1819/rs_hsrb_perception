@@ -60,3 +60,5 @@ target_link_libraries(rs_SuturoClassifier ${PROJECT_NAME})
 rs_add_library(rs_SaveClusterCloudsAndImages src/SaveClusterCloudsAndImages.cpp)
 target_link_libraries(rs_SaveClusterCloudsAndImages ${catkin_LIBRARIES})
 
+rs_add_library(rs_RegionAnnotator src/RegionAnnotator.cpp)
+target_link_libraries(rs_RegionAnnotator ${catkin_LIBRARIES})

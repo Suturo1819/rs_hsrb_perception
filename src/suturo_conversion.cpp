@@ -105,15 +105,15 @@ namespace rs_hsrb_perception {
             return 0;
         }
 
-        void makeObjectDetectionData(geometry_msgs::PoseStamped &pose, rs::Geometry &geometry, u_int shape,
-                std::string &objClass, float confidence,
-                suturo_perception_msgs::ObjectDetectionData &odd) {
+        void makeObjectDetectionData(geometry_msgs::PoseStamped &pose, rs::Geometry &geometry, u_int shape, std::string region,
+                std::string &objClass, float confidence, suturo_perception_msgs::ObjectDetectionData &odd) {
             odd.pose = pose;
             auto boundingBox = geometry.boundingBox();
             odd.width = boundingBox.width();
             odd.height = boundingBox.height();
             odd.depth = boundingBox.depth();
             odd.shape = shape;
+            odd.region = region;
 
             odd.obj_class = objClass;
             odd.confidence = confidence;

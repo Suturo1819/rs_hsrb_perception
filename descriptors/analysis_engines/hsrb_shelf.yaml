@@ -9,6 +9,7 @@ fixedflow:
 - PointCloudClusterExtractor
 - Cluster3DGeometryAnnotator
 - PrimitiveShapeAnnotator
+- RegionAnnotator
 #- CaffeAnnotator
 #- KnnAnnotator
 #- KnnAnnotatorKnownObj

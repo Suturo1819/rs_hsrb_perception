@@ -23,7 +23,7 @@ namespace rs_hsrb_perception {
         u_int decode_shape(std::vector<rs::Shape> shapes);
 
         void makeObjectDetectionData(geometry_msgs::PoseStamped &pose, rs::Geometry &geometry, u_int shape,
-                                     std::string &objClass, float confidence,
+                                     std::string region, std::string &objClass, float confidence,
                                      suturo_perception_msgs::ObjectDetectionData &odd);
     }
 }

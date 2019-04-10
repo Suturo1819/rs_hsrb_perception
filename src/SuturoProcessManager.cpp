@@ -130,9 +130,8 @@ void SuturoProcessManager::getClusterFeatures(rs::ObjectHypothesis cluster, std:
             ROS_WARN("Warning: No object class was perceived");
         }
 
-
         rs_hsrb_perception::conversion::makeObjectDetectionData(poseStamped, geometry[0],
-                rs_hsrb_perception::conversion::decode_shape(shapes), objClass, confidence, odd);
+                rs_hsrb_perception::conversion::decode_shape(shapes), cluster.region(), objClass, confidence, odd);
         data.push_back(odd);
 
 
