@@ -114,7 +114,7 @@ namespace rs_hsrb_perception {
             odd.depth = boundingBox.depth();
             odd.shape = shape;
             odd.region = region;
-
+            odd.name = "Object (" + objClass + ")";
             odd.obj_class = objClass;
             odd.confidence = confidence;
 
