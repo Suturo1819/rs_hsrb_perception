@@ -29,4 +29,11 @@ public:
     void init(std::string &pipeline);
 
     void run(std::map<std::string, boost::any> args, std::vector<ObjectDetectionData> &detectionData);
+
+    /**
+     * Determines if a vertical plane is visible
+     * Necessary for door detection
+     * @return
+     */
+    bool has_vertical_plane();
 };

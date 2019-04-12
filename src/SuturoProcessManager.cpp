@@ -77,6 +77,22 @@ void SuturoProcessManager::run(std::map<std::string, boost::any> args, std::vect
     }
 }
 
+bool SuturoProcessManager::has_vertical_plane() {
+    outInfo("Looking for a vertical plane...");
+    outInfo("Running the analysis engine...");
+    engine.process();
+    uima::CAS* tcas = engine.getCas();
+    rs::SceneCas cas(*tcas);
+    rs::Scene scene = cas.getScene();
+    pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_ptr(new pcl::PointCloud<pcl::PointXYZRGBA>);
+    cas.get(VIEW_CLOUD, *cloud_ptr);
+
+    std::vector<rs::Plane> planes;
+    scene.annotations.filter(planes);
+    return !planes.empty();
+
+}
+
 
 void SuturoProcessManager::getClusterFeatures(rs::ObjectHypothesis cluster, std::vector<ObjectDetectionData> &data) {
 

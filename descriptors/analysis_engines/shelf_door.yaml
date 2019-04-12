@@ -3,7 +3,7 @@ ae:
 fixedflow:
 - CollectionReader
 - ImagePreprocessor
-- RegionFilter
+- PointCloudFilter
 - NormalEstimator
 - PlaneAnnotator
 - PointCloudClusterExtractor
@@ -32,4 +32,4 @@ RegionFilter:
 
 PlaneAnnotator:
   horizontal: false
-  min_plane_inliers: 1000
+  min_plane_inliers: 150000
