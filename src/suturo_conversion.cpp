@@ -110,8 +110,8 @@ namespace rs_hsrb_perception {
             odd.pose = pose;
             auto boundingBox = geometry.boundingBox();
             odd.width = boundingBox.width();
-            odd.height = boundingBox.height();
-            odd.depth = boundingBox.depth();
+            odd.depth= boundingBox.height();
+            odd.height = boundingBox.depth();
             odd.shape = shape;
             odd.region = region;
             odd.name = "Object (" + objClass + ")";
