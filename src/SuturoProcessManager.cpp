@@ -112,11 +112,15 @@ void SuturoProcessManager::getClusterFeatures(rs::ObjectHypothesis cluster, std:
         std::vector<rs::Shape> shapes;
         cluster.annotations.filter(shapes);
 
+        std::vector<rs::SemanticColor> colorH;
+        cluster.annotations.filter(colorH);
+
         geometry_msgs::PoseStamped poseStamped;
         std::string objClass;
         std::string knownObjClass;
         float confidence = 0;
         float knownObjConfidence = 0;
+
         ObjectDetectionData odd;
         if(!poses.empty()) {
             rs_hsrb_perception::conversion::from(poses[0].world.get(), poseStamped);
