@@ -8,8 +8,8 @@
 SuturoProcessManager::SuturoProcessManager(ros::NodeHandle n, const std::string savePath, std::string &name) :
     savePath(savePath),
     nh(n),
-    image_transport(nh),
-    visualizer(savePath, true);
+//    image_transport(nh),
+    visualizer(savePath, true),
     name(name)
 {
     outInfo("A RoboSherlock process manager optimized for the Suturo perception was created.");
@@ -30,8 +30,9 @@ SuturoProcessManager::SuturoProcessManager(ros::NodeHandle n, const std::string 
             resourceManager.setLoggingLevel(uima::LogStream::EnMessage);
             break;
     }
-    vis_service = nh.advertiseService("vis_command", &RSProcessManager::visControlCallback, this);
-    image_pub = image_transport.advertise("result_image", 1, true);
+    //error: no macthing  member function  for call  to 'advertise service'
+      vis_service = nh.advertiseService("vis_command", &RSProcessManager::visControlCallback, this);
+//    image_pub = image_transport.advertise("result_image", 1, true);
     regions = std::vector<std::string>();
 }
 
