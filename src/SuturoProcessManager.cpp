@@ -8,6 +8,8 @@
 SuturoProcessManager::SuturoProcessManager(ros::NodeHandle n, const std::string savePath, std::string &name) :
     savePath(savePath),
     nh(n),
+    image_transport(nh),
+    visualizer(savePath, true);
     name(name)
 {
     outInfo("A RoboSherlock process manager optimized for the Suturo perception was created.");
@@ -28,6 +30,8 @@ SuturoProcessManager::SuturoProcessManager(ros::NodeHandle n, const std::string 
             resourceManager.setLoggingLevel(uima::LogStream::EnMessage);
             break;
     }
+    vis_service = nh.advertiseService("vis_command", &RSProcessManager::visControlCallback, this);
+    image_pub = image_transport.advertise("result_image", 1, true);
     regions = std::vector<std::string>();
 }
 
@@ -48,10 +52,6 @@ void SuturoProcessManager::init(std::string &pipeline) {
 void SuturoProcessManager::run(std::map<std::string, boost::any> args, std::vector<ObjectDetectionData>& detectionData) {
     outInfo("Running the Suturo Process Manager");
     outInfo("Setting up runtime parameters...");
-    if(args.find("visualize") != args.end()) {
-        visualize = boost::any_cast<bool>(&args["visualize"]);
-        //@Todo: Create visualizer here
-    }
     if(args.find("regions") != args.end()) {
         outInfo("Custom regions are displayed");
         regions = boost::any_cast<std::vector<std::string>>(args["regions"]);
