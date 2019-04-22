@@ -24,6 +24,7 @@ namespace rs_hsrb_perception {
 
         void makeObjectDetectionData(geometry_msgs::PoseStamped &pose, rs::Geometry &geometry, u_int shape,
                                      std::string region, std::string &objClass, float confidence,
+                                     std_msgs::ColorRGBA &c,
                                      suturo_perception_msgs::ObjectDetectionData &odd);
     }
 }

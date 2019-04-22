@@ -5,6 +5,8 @@
  */
 // ROS
 #include <rs_hsrb_perception/suturo_conversion.h>
+#include "../../../../../../../opt/ros/kinetic/include/std_msgs/ColorRGBA.h"
+#include "../../../../../../../opt/ros/kinetic/include/geometry_msgs/PoseStamped.h"
 
 namespace rs_hsrb_perception {
     namespace conversion {
@@ -106,7 +108,15 @@ namespace rs_hsrb_perception {
         }
 
         void makeObjectDetectionData(geometry_msgs::PoseStamped &pose, rs::Geometry &geometry, u_int shape, std::string region,
-                std::string &objClass, float confidence, suturo_perception_msgs::ObjectDetectionData &odd) {
+                std::string &objClass, float confidence, std_msgs::ColorRGBA &c,  suturo_perception_msgs::ObjectDetectionData &odd) {
+
+//            std_msgs::ColorRGBA c;
+//            c.r = r;
+//            c.g = g;
+//            c.b = b;
+//            c.a = 1;
+
+
             odd.pose = pose;
             auto boundingBox = geometry.boundingBox();
             odd.width = boundingBox.width();
@@ -117,8 +127,12 @@ namespace rs_hsrb_perception {
             odd.name = "Object (" + objClass + ")";
             odd.obj_class = objClass;
             odd.confidence = confidence;
+            odd.color = c;
+
 
         }
+
+
 
     }
 }

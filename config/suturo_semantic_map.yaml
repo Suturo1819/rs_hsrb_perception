@@ -1,11 +1,11 @@
 %YAML:1.0
 names:
-- robocup_table
-- robocup_shelf_0
-- robocup_shelf_1
-- robocup_shelf_2
-- robocup_shelf_3
-- robocup_shelf_4
+  - robocup_table
+  - robocup_shelf_0
+  - robocup_shelf_1
+  - robocup_shelf_2
+  - robocup_shelf_3
+  - robocup_shelf_4
 robocup_shelf_0:
   depth: 0.36
   height: 0.4
