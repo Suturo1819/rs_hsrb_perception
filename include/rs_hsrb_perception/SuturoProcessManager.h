@@ -27,9 +27,8 @@ public:
     rs::Visualizer visualizer;
 
     // ROS stuff for image topics
-    ros::ServiceServer vis_service;
-    //image_transport::Publisher image_pub;
-    //image_transport::ImageTransport image_transport;
+    image_transport::Publisher image_pub;
+    image_transport::ImageTransport image_transport;
 
     // Functions
     SuturoProcessManager(ros::NodeHandle n, std::string savePath, std::string &name);

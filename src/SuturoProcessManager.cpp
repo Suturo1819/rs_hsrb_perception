@@ -9,7 +9,7 @@
 SuturoProcessManager::SuturoProcessManager(ros::NodeHandle n, const std::string savePath, std::string &name) :
     savePath(savePath),
     nh(n),
-//    image_transport(nh),
+    image_transport(nh),
     visualizer(savePath, true),
     name(name)
 {
@@ -32,8 +32,8 @@ SuturoProcessManager::SuturoProcessManager(ros::NodeHandle n, const std::string 
             break;
     }
     //error: no macthing  member function  for call  to 'advertise service'
-      vis_service = nh.advertiseService("vis_command", &RSProcessManager::visControlCallback, this);
-//    image_pub = image_transport.advertise("result_image", 1, true);
+    //vis_service = nh.advertiseService("vis_command", &RSProcessManager::visControlCallback, this);
+    image_pub = image_transport.advertise("result_image", 1, true);
     regions = std::vector<std::string>();
 }
 
