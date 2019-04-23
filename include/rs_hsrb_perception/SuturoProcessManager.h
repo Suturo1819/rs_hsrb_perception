@@ -32,8 +32,11 @@ public:
     image_transport::ImageTransport image_transport;
 
     // Functions
+    SuturoProcessManager(ros::NodeHandle n, std::string &name);
     SuturoProcessManager(ros::NodeHandle n, std::string savePath, std::string &name);
     ~SuturoProcessManager(){};
+
+    void setup();
 
     void init(std::string &pipeline);
 

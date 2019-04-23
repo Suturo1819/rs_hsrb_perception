@@ -13,6 +13,24 @@ SuturoProcessManager::SuturoProcessManager(ros::NodeHandle n, const std::string 
     visualizer(savePath, true),
     name(name)
 {
+    setup();
+    //error: no macthing  member function  for call  to 'advertise service'
+    vis_service = nh.advertiseService("vis_command", &SuturoProcessManager::visControlCallback, this);
+    image_pub = image_transport.advertise("result_image", 1, true);
+    visualize = true;
+}
+
+SuturoProcessManager::SuturoProcessManager(ros::NodeHandle n, std::string &name) :
+        nh(n),
+        image_transport(nh),
+        visualizer(savePath, true),
+        name(name)
+{
+    setup();
+    visualize = false;
+}
+
+void SuturoProcessManager::setup() {
     outInfo("A RoboSherlock process manager optimized for the Suturo perception was created.");
     signal(SIGINT, RSProcessManager::signalHandler);
     outInfo("Creating resource manager");
@@ -31,13 +49,8 @@ SuturoProcessManager::SuturoProcessManager(ros::NodeHandle n, const std::string 
             resourceManager.setLoggingLevel(uima::LogStream::EnMessage);
             break;
     }
-    //error: no macthing  member function  for call  to 'advertise service'
-    vis_service = nh.advertiseService("vis_command", &RSProcessManager::visControlCallback, this);
-    image_pub = image_transport.advertise("result_image", 1, true);
     regions = std::vector<std::string>();
 }
-
-
 
 void SuturoProcessManager::init(std::string &pipeline) {
     outInfo("Initializing Engine...");
@@ -49,6 +62,9 @@ void SuturoProcessManager::init(std::string &pipeline) {
 
     uima::ErrorInfo errorInfo;
     mongo::client::GlobalInstance instance;
+    if(visualize) {
+        visualizer.start();
+    }
 }
 
 void SuturoProcessManager::run(std::map<std::string, boost::any> args, std::vector<ObjectDetectionData>& detectionData) {
