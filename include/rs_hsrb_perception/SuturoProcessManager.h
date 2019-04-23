@@ -27,6 +27,7 @@ public:
     rs::Visualizer visualizer;
 
     // ROS stuff for image topics
+    ros::ServiceServer vis_service;
     image_transport::Publisher image_pub;
     image_transport::ImageTransport image_transport;
 
@@ -44,4 +45,7 @@ public:
      * @return
      */
     bool has_vertical_plane();
+
+    bool visControlCallback(robosherlock_msgs::RSVisControl::Request &req,
+                            robosherlock_msgs::RSVisControl::Response &res);
 };

@@ -32,7 +32,7 @@ SuturoProcessManager::SuturoProcessManager(ros::NodeHandle n, const std::string 
             break;
     }
     //error: no macthing  member function  for call  to 'advertise service'
-    //vis_service = nh.advertiseService("vis_command", &RSProcessManager::visControlCallback, this);
+    vis_service = nh.advertiseService("vis_command", &RSProcessManager::visControlCallback, this);
     image_pub = image_transport.advertise("result_image", 1, true);
     regions = std::vector<std::string>();
 }
@@ -209,4 +209,32 @@ void SuturoProcessManager::getClusterFeatures(rs::ObjectHypothesis cluster, std:
         ROS_WARN("Object Feature detection was unsuccessful. No geometries were recognized for this object.");
     }
 
+}
+
+bool SuturoProcessManager::visControlCallback(robosherlock_msgs::RSVisControl::Request &req,
+                                          robosherlock_msgs::RSVisControl::Response &res)
+{
+    std::string command = req.command;
+    bool result = true;
+    std::string activeAnnotator = "";
+    if(command == "next")
+    {
+        activeAnnotator = visualizer.nextAnnotator();
+
+    }
+    else if(command == "previous")
+    {
+        activeAnnotator = visualizer.prevAnnotator();
+    }
+    else if(command != "")
+    {
+        activeAnnotator = visualizer.selectAnnotator(command);
+    }
+    if(activeAnnotator == "")
+        result = false;
+
+    res.success = result;
+
+    res.active_annotator = activeAnnotator;
+    return result;
 }
