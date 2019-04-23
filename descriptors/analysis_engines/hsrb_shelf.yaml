@@ -10,9 +10,9 @@ fixedflow:
 - Cluster3DGeometryAnnotator
 - PrimitiveShapeAnnotator
 - RegionAnnotator
-#- CaffeAnnotator
-#- KnnAnnotator
-#- KnnAnnotatorKnownObj
+- CaffeAnnotator
+- KnnAnnotator
+- KnnAnnotatorKnownObj
 
 CollectionReader:
   camera_config_files: ['config_hsrb.ini']

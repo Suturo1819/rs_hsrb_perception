@@ -8,10 +8,11 @@ fixedflow:
 - PlaneAnnotator
 - PointCloudClusterExtractor
 - Cluster3DGeometryAnnotator
+- ClusterColorHistogramCalculator
 - PrimitiveShapeAnnotator
-- CaffeAnnotator
-- KnnAnnotator
-- KnnAnnotatorKnownObj
+#- CaffeAnnotator
+#- KnnAnnotator
+#- KnnAnnotatorKnownObj
 - RegionAnnotator
 
 CollectionReader:

@@ -1,9 +1,10 @@
 /**
  * Modified RoboSherlock Process Manager
  * Optimized for the Suturo Perception Pipelines
- * @author Fenja Kollasch
+ * @author Fenja Kollasch & Vanessa Hassouna
  */
 #include <rs_hsrb_perception/SuturoProcessManager.h>
+#include "../../../../../../../opt/ros/kinetic/include/std_msgs/ColorRGBA.h"
 
 SuturoProcessManager::SuturoProcessManager(ros::NodeHandle n, const std::string savePath, std::string &name) :
     savePath(savePath),
@@ -113,12 +114,63 @@ void SuturoProcessManager::getClusterFeatures(rs::ObjectHypothesis cluster, std:
         std::vector<rs::Shape> shapes;
         cluster.annotations.filter(shapes);
 
+        std::vector<rs::SemanticColor> colorH;
+        cluster.annotations.filter(colorH);
+
         geometry_msgs::PoseStamped poseStamped;
         std::string objClass;
         std::string knownObjClass;
         float confidence = 0;
         float knownObjConfidence = 0;
+        float r = 0.0;
+        float g = 0.0;
+        float b =0.0;
+        std_msgs::ColorRGBA c;
+
+
         ObjectDetectionData odd;
+
+        if(!colorH.empty()) {
+
+            std::string tmp_color_string = colorH[0].color.get();
+            outInfo("" << colorH[0].color.get());
+
+
+            if(tmp_color_string == "red") {
+                r = 255.0;}
+            if(tmp_color_string == "yellow") {
+                r = 255.0;
+                g = 255.0;}
+            if(tmp_color_string == "green") {
+                g = 255.0;}
+            if(tmp_color_string == "cyan") {
+                g = 255.0;
+                b = 255.0;}
+            if(tmp_color_string == "blue") {
+                b = 255.0;}
+            if(tmp_color_string == "magenta") {
+                r = 255.0;
+                b = 255.0;}
+            if(tmp_color_string == "white") {
+                r = 255.0;
+                g = 255.0;
+                b = 255.0;}
+            if(tmp_color_string == "grey") {
+                r = 127.0;
+                g = 127.0;
+                b = 127.0;}
+
+
+            c.r = r;
+            c.g = g;
+            c.b = b;
+            c.a = 1;
+
+        } else {
+            ROS_WARN("Warning: No color was perviecde");
+        }
+
+
         if(!poses.empty()) {
             rs_hsrb_perception::conversion::from(poses[0].world.get(), poseStamped);
         } else {
@@ -148,7 +200,7 @@ void SuturoProcessManager::getClusterFeatures(rs::ObjectHypothesis cluster, std:
         }
 
         rs_hsrb_perception::conversion::makeObjectDetectionData(poseStamped, geometry[0],
-                rs_hsrb_perception::conversion::decode_shape(shapes), cluster.region(), objClass, confidence, odd);
+                rs_hsrb_perception::conversion::decode_shape(shapes), cluster.region(), objClass, confidence, c, odd);
         data.push_back(odd);
 
 
