@@ -9,8 +9,28 @@
 SuturoProcessManager::SuturoProcessManager(ros::NodeHandle n, const std::string savePath, std::string &name) :
     savePath(savePath),
     nh(n),
+    image_transport(nh),
+    visualizer(savePath, true),
     name(name)
 {
+    setup();
+    //error: no macthing  member function  for call  to 'advertise service'
+    vis_service = nh.advertiseService("vis_command", &SuturoProcessManager::visControlCallback, this);
+    image_pub = image_transport.advertise("result_image", 1, true);
+    visualize = true;
+}
+
+SuturoProcessManager::SuturoProcessManager(ros::NodeHandle n, std::string &name) :
+        nh(n),
+        image_transport(nh),
+        visualizer(savePath, true),
+        name(name)
+{
+    setup();
+    visualize = false;
+}
+
+void SuturoProcessManager::setup() {
     outInfo("A RoboSherlock process manager optimized for the Suturo perception was created.");
     signal(SIGINT, RSProcessManager::signalHandler);
     outInfo("Creating resource manager");
@@ -32,8 +52,6 @@ SuturoProcessManager::SuturoProcessManager(ros::NodeHandle n, const std::string 
     regions = std::vector<std::string>();
 }
 
-
-
 void SuturoProcessManager::init(std::string &pipeline) {
     outInfo("Initializing Engine...");
     signal(SIGINT, RSProcessManager::signalHandler);
@@ -44,15 +62,14 @@ void SuturoProcessManager::init(std::string &pipeline) {
 
     uima::ErrorInfo errorInfo;
     mongo::client::GlobalInstance instance;
+    if(visualize) {
+        visualizer.start();
+    }
 }
 
 void SuturoProcessManager::run(std::map<std::string, boost::any> args, std::vector<ObjectDetectionData>& detectionData) {
     outInfo("Running the Suturo Process Manager");
     outInfo("Setting up runtime parameters...");
-    if(args.find("visualize") != args.end()) {
-        visualize = boost::any_cast<bool>(&args["visualize"]);
-        //@Todo: Create visualizer here
-    }
     if(args.find("regions") != args.end()) {
         outInfo("Custom regions are displayed");
         regions = boost::any_cast<std::vector<std::string>>(args["regions"]);
@@ -208,4 +225,32 @@ void SuturoProcessManager::getClusterFeatures(rs::ObjectHypothesis cluster, std:
         ROS_WARN("Object Feature detection was unsuccessful. No geometries were recognized for this object.");
     }
 
+}
+
+bool SuturoProcessManager::visControlCallback(robosherlock_msgs::RSVisControl::Request &req,
+                                          robosherlock_msgs::RSVisControl::Response &res)
+{
+    std::string command = req.command;
+    bool result = true;
+    std::string activeAnnotator = "";
+    if(command == "next")
+    {
+        activeAnnotator = visualizer.nextAnnotator();
+
+    }
+    else if(command == "previous")
+    {
+        activeAnnotator = visualizer.prevAnnotator();
+    }
+    else if(command != "")
+    {
+        activeAnnotator = visualizer.selectAnnotator(command);
+    }
+    if(activeAnnotator == "")
+        result = false;
+
+    res.success = result;
+
+    res.active_annotator = activeAnnotator;
+    return result;
 }

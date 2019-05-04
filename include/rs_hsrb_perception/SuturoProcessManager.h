@@ -22,9 +22,21 @@ private:
     std::vector<std::string> regions;
     void getClusterFeatures(rs::ObjectHypothesis cluster, std::vector<ObjectDetectionData> &data);
 public:
+    // Public Parameters
     RSAnalysisEngine engine;
+    rs::Visualizer visualizer;
+
+    // ROS stuff for image topics
+    ros::ServiceServer vis_service;
+    image_transport::Publisher image_pub;
+    image_transport::ImageTransport image_transport;
+
+    // Functions
+    SuturoProcessManager(ros::NodeHandle n, std::string &name);
     SuturoProcessManager(ros::NodeHandle n, std::string savePath, std::string &name);
     ~SuturoProcessManager(){};
+
+    void setup();
 
     void init(std::string &pipeline);
 
@@ -36,4 +48,7 @@ public:
      * @return
      */
     bool has_vertical_plane();
+
+    bool visControlCallback(robosherlock_msgs::RSVisControl::Request &req,
+                            robosherlock_msgs::RSVisControl::Response &res);
 };
