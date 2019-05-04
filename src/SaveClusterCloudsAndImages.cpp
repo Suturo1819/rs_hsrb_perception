@@ -87,7 +87,7 @@ public:
             ctx.extractValue("padding", padding);
         }
 
-        fullPath = ros::package::getPath("rs_hsr_perception") + "/data/" + objectName;
+        fullPath = ros::package::getPath("rs_hsrb_perception") + "/data/" + objectName;
         outInfo("FULLPATH WURDE GESETTET>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>..");
         struct stat fileStat;
 
@@ -139,10 +139,10 @@ public:
             outInfo(roi.height);
             outInfo(roi.width);
             outInfo(padding);
-            roi.x -=  padding;
-            roi.y -= padding;
-            roi.height += 2 * padding;
-            roi.width += 2 * padding;
+            roi.x -= 0.1*padding;
+            roi.y -=  0.1*padding;
+            roi.height +=  5* padding;
+            roi.width +=  5* padding;
             mask = cv::Mat::zeros(roi.height,roi.width,CV_8UC1);
 
 
@@ -169,12 +169,7 @@ public:
             cv::copyMakeBorder(mask,paddedMask,padding,padding,padding,padding,cv::BORDER_CONSTANT,value);
             cv::imwrite(ss_mask.str(), paddedMask);
 
-            cv::Mat imgInput = cv::imread(ss_rgb.str());
 
-            if (imgInput.data != NULL)
-            {
-                outInfo("inputData empty?");
-            }
 
 
             filestream.open(ss_location.str(), std::ios::out);
