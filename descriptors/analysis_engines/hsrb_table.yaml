@@ -8,13 +8,15 @@ fixedflow:
 - PlaneAnnotator
 - PointCloudClusterExtractor
 - ClusterColorHistogramCalculator
-#- ClusterFilter
-- ClusterMerger
+- ClusterFilter
+#- ClusterMerger
 - Cluster3DGeometryAnnotator
 - PrimitiveShapeAnnotator
-#- CaffeAnnotator
-#- KnnAnnotator
+- CaffeAnnotator
+- KnnAnnotator
+- CaffeClassificationAnnotator
 #- KnnAnnotatorKnownObj
+#- KnnAnnotatorRobocupObj
 
 #- PositionMsg
 
@@ -24,11 +26,11 @@ CollectionReader:
 PointCloudFilter:
   minX: -1.0
   maxX: 1.0
-  minY: -1.5
-  maxY: 1.5
-  minZ: 0.7
+  minY: -1.0
+  maxY: 1.0
+  minZ: 0.5
   maxZ: 2.0
-  transform_cloud: true
+  transform_cloud: false
 
 
 PlaneAnnotator:

@@ -3,17 +3,19 @@ ae:
 fixedflow:
 - CollectionReader
 - ImagePreprocessor
-- RegionFilter
+#- RegionFilter
 - NormalEstimator
 - PlaneAnnotator
 - PointCloudClusterExtractor
 - Cluster3DGeometryAnnotator
 - ClusterColorHistogramCalculator
 - PrimitiveShapeAnnotator
-#- CaffeAnnotator
-#- KnnAnnotator
-#- KnnAnnotatorKnownObj
 - RegionAnnotator
+- CaffeAnnotator
+- KnnAnnotator
+- KnnAnnotatorUniqueClasses
+- ObjectFilter
+#- RfAnnotator
 
 CollectionReader:
   camera_config_files: ['config_hsrb.ini']
@@ -41,3 +43,9 @@ RegionFilter:
 PlaneAnnotator:
   horizontal: true
   min_plane_inliers: 1000
+  distance_threshold: 0.004
+
+#PointCloudClusterExtractor:
+  #polygon_min_height: 0.01
+  #cluster_tolerance: 0.09
+  #cluster_min_size: 300

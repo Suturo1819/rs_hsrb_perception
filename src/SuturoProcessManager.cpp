@@ -4,7 +4,9 @@
  * @author Fenja Kollasch & Vanessa Hassouna
  */
 #include <rs_hsrb_perception/SuturoProcessManager.h>
+#include <pcl-1.7/pcl/impl/point_types.hpp>
 #include "../../../../../../../opt/ros/kinetic/include/std_msgs/ColorRGBA.h"
+
 
 SuturoProcessManager::SuturoProcessManager(ros::NodeHandle n, const std::string savePath, std::string &name) :
     savePath(savePath),
@@ -70,28 +72,29 @@ void SuturoProcessManager::init(std::string &pipeline) {
 void SuturoProcessManager::run(std::map<std::string, boost::any> args, std::vector<ObjectDetectionData>& detectionData) {
     outInfo("Running the Suturo Process Manager");
     outInfo("Setting up runtime parameters...");
-    if(args.find("regions") != args.end()) {
-        outInfo("Custom regions are displayed");
-        regions = boost::any_cast<std::vector<std::string>>(args["regions"]);
-        filter_regions = true;
-    }
+//    if(args.find("regions") != args.end()) {
+//        outInfo("Custom regions are displayed");
+//        regions = boost::any_cast<std::vector<std::string>>(args["regions"]);
+//        filter_regions = true;
+//    }
     outInfo("Analysis engine starts processing");
     engine.process();
     uima::CAS* tcas = engine.getCas();
     rs::SceneCas cas(*tcas);
     pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloud_ptr(new pcl::PointCloud<pcl::PointXYZRGBA>);
+    rs::StopWatch clock;
     cas.get(VIEW_CLOUD, *cloud_ptr);
 
     rs::Scene scene = cas.getScene();
     std::vector<rs::ObjectHypothesis> clusters;
     scene.identifiables.filter(clusters);
     for (auto &cluster : clusters) {
-        outInfo("Cluster region: " << cluster.region());
-        if(!filter_regions || std::find(regions.begin(), regions.end(), cluster.region()) != regions.end()) {
-            getClusterFeatures(cluster, detectionData);
-        } else {
-            outInfo("Object was ignored because it seems to be placed on the wrong surface");
-        }
+
+
+          getClusterFeatures(cluster, detectionData);
+
+
+
     }
 }
 

@@ -9,6 +9,8 @@
 #include <rs/flowcontrol/RSProcessManager.h>
 #include <rs_hsrb_perception/suturo_conversion.h>
 #include <suturo_perception_msgs/ObjectDetectionData.h>
+#include "../../../../../../../../opt/ros/kinetic/include/ros/node_handle.h"
+#include "../../../../../../../../opt/ros/kinetic/include/ros/ros.h"
 
 using namespace suturo_perception_msgs;
 

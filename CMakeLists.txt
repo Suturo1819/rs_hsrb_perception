@@ -62,3 +62,5 @@ target_link_libraries(rs_SaveClusterCloudsAndImages ${catkin_LIBRARIES})
 
 rs_add_library(rs_RegionAnnotator src/RegionAnnotator.cpp)
 target_link_libraries(rs_RegionAnnotator ${catkin_LIBRARIES})
+rs_add_library(rs_ObjectFilter src/ObjectFilter.cpp)
+target_link_libraries(rs_ObjectFilter ${catkin_LIBRARIES})

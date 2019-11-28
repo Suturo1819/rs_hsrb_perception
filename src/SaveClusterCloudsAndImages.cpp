@@ -146,6 +146,8 @@ public:
             mask = cv::Mat::zeros(roi.height,roi.width,CV_8UC1);
 
 
+
+
             rs::conversion::from(image_rois.mask_hires(), mask);
 
             std::stringstream ss_rgb;

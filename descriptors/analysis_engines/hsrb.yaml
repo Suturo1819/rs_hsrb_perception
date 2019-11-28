@@ -9,8 +9,8 @@ fixedflow:
 - PointCloudClusterExtractor
 - Cluster3DGeometryAnnotator
 - PrimitiveShapeAnnotator
-- CaffeAnnotator
-- RfAnnotator
+#- CaffeAnnotator
+#- RfAnnotator
 #- StorageWriter
 #- FeatureAnnotator
 #- KnnAnnotator
