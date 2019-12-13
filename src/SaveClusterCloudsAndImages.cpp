@@ -92,6 +92,7 @@ public:
         {
             mkdir(fullPath.c_str(), 9999);
         }
+        outInfo("hallo");
         outInfo("saving images to: "<<fullPath);
         idx = 0;
         return (TyErrorId) UIMA_ERR_NONE;
@@ -101,7 +102,7 @@ public:
     {
         return (TyErrorId) UIMA_ERR_NONE;
     }
-
+    
     TyErrorId destroy()
     {
 
@@ -116,6 +117,7 @@ public:
         rs::StopWatch clock;
         rs::SceneCas cas(tcas);
         rs::Scene scene = cas.getScene();
+
         std::vector<rs::ObjectHypothesis> clusters;
         pcl::PointCloud<pcl::PointXYZRGBA>::Ptr cloudPtr(new pcl::PointCloud<pcl::PointXYZRGBA>());
         cas.get(VIEW_COLOR_IMAGE_HD, color);
@@ -130,10 +132,10 @@ public:
             cv::Mat mask;
             cv::Rect roi;
             rs::conversion::from(image_rois.roi_hires(), roi);
-//            roi.x -= padding;
-//            roi.y -= padding;
-//            roi.height += 2 * padding;
-//            roi.width += 2 * padding;
+            //roi.x -= padding;
+            //roi.y -= padding;
+            //roi.height += 2 * padding;
+            //roi.width += 2 * padding;
             rs::conversion::from(image_rois.mask_hires(), mask);
 
             std::stringstream ss_rgb;
@@ -142,7 +144,7 @@ public:
             std::stringstream ss_pcd;
             std::fstream filestream;
 
-            ss_rgb << fullPath << "/" << objectName << "_" << angle << "_" << idx << "_crop.png";
+            ss_rgb << "~/perception_ws/src/rs_hsrb_perception/data" << "/" << objectName << "_" << angle << "_" << idx << "_crop.png";
             ss_depth << fullPath << "/" << objectName << "_" << angle << "_" << idx << "_depthcrop.png";
             ss_mask << fullPath << "/" << objectName << "_" << angle << "_" << idx << "_mask.png";
             ss_location << fullPath << "/" << objectName << "_" << angle << "_" << idx << "_loc.txt";
@@ -176,6 +178,8 @@ public:
                 ei.filter(*cluster_cloud);
                 //pcl::io::savePCDFileBinaryCompressed(ss_pcd.str(), *cluster_cloud);
             }
+            outInfo(ss_rgb.str());
+            outInfo("END FILE SHOULD BE SAVED");
         }
         idx++;
         return (TyErrorId) UIMA_ERR_NONE;

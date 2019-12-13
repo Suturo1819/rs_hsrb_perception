@@ -18,5 +18,8 @@ PointCloudFilter:
   maxZ: 2.0
 
 PlaneAnnotator:
+  horizontal: true
+
   save_to_file: true
+
 

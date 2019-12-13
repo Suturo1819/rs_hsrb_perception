@@ -47,13 +47,8 @@ generate_type_system(robosherlock)
 #find all relevant files
 find_additional_files()
 
-# Utilities
-add_library(Suturo SHARED src/SuturoProcessManager.cpp)
-target_link_libraries(Suturo ${CATKIN_LIBRARIES})
 
-# Annotators / Fixed Flow Types
-rs_add_library(rs_SuturoClassifier src/SuturoClassifier.cpp)
-target_link_libraries(rs_SuturoClassifier Suturo)
+
 
 rs_add_library(rs_SaveClusterCloudsAndImages src/SaveClusterCloudsAndImages.cpp)
 target_link_libraries(rs_SaveClusterCloudsAndImages ${catkin_LIBRARIES})
